@@ -112,8 +112,7 @@ running = True
 while running:
     screen.fill((255, 255, 255))
     draw_grid()
-    pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) // CELL_SIZE
-    pos += 0.5
+    pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     vel = intervel(pos)
     vel[1] *= -1
     pygame.draw.line(screen, (0, 255, 0), pos * CELL_SIZE, (pos + vel) * CELL_SIZE)
