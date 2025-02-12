@@ -64,6 +64,7 @@ def draw_grid():
                 color = (0, 0, min(-dv, 255))
             else:
                 color = (min(dv, 255), 0, 0)
+            # color = (255, 255, 255)
             pygame.draw.rect(
                 screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             )
@@ -90,19 +91,47 @@ dampling = 0.999
 
 def intervel(pos):
     global w_grid, h_grid
-    x, y = pos[0], pos[1]
-    x = clamp(x, 0, GRID_WIDTH)
-    y = clamp(y, 0, GRID_HEIGHT)
-    X = int(x)
-    Y = int(y)
-    a = x - X
-    b = y - Y
+    px, py = pos[0], pos[1]
+
+    X1 = int(clamp(px - 0.5, 0, GRID_WIDTH))
+    Y1 = int(clamp(py - 0.5, 0, GRID_HEIGHT))
+    X2 = int(clamp(px + 0.5, 0, GRID_WIDTH))
+    Y2 = int(clamp(py + 0.5, 0, GRID_HEIGHT))
+    # pygame.draw.circle(
+    #     screen,
+    #     (255, 0, 255),
+    #     ((X2) * CELL_SIZE, (Y2) * CELL_SIZE),
+    #     3,
+    # )
+
+    # pygame.draw.circle(
+    #     screen,
+    #     (0, 255, 255),
+    #     ((X2) * CELL_SIZE, (Y1) * CELL_SIZE),
+    #     3,
+    # )
+
+    px = clamp(px, 0, GRID_WIDTH)
+    py = clamp(py, 0, GRID_HEIGHT)
+
+    a = abs(px - (X1 + 0.5))
+    b = abs(py - (Y1 + 0.5))
+    print(b)
     c = 1 - a
     d = 1 - b
-    return np.array(
+
+    return 100 * np.array(
         [
-            w_grid[Y, X] * a + w_grid[Y, X + 1] * c,
-            h_grid[Y, X] * b + h_grid[Y + 1, X] * d,
+            # X
+            c * d * w_grid[Y1, X1]
+            + a * d * w_grid[Y1, X2]
+            + b * c * w_grid[Y2, X1]
+            + a * b * w_grid[Y2, X2],
+            # Y
+            c * d * h_grid[Y1, X1]
+            + b * c * h_grid[Y2, X1]
+            + a * d * h_grid[Y1, X2]
+            + a * b * h_grid[Y2, X2],
         ]
     )
 
@@ -115,6 +144,7 @@ while running:
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     vel = intervel(pos)
     vel[1] *= -1
+    print(vel)
     pygame.draw.line(screen, (0, 255, 0), pos * CELL_SIZE, (pos + vel) * CELL_SIZE)
     pygame.display.flip()
 
