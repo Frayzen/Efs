@@ -1,12 +1,13 @@
+from sys import get_coroutine_origin_tracking_depth
 import pygame
 import time
 import numpy as np
 from pygame.math import clamp
 
 # Grid settings
-CELL_SIZE = 90  # Pixel size of each cell
-GRID_WIDTH = 9  # Number of cells horizontally
-GRID_HEIGHT = 9  # Number of cells vertically
+CELL_SIZE = 20  # Pixel size of each cell
+GRID_WIDTH = 30  # Number of cells horizontally
+GRID_HEIGHT = 30  # Number of cells vertically
 
 # Window settings
 WINDOW_WIDTH = GRID_WIDTH * CELL_SIZE
@@ -26,6 +27,7 @@ def build_checkerboard(shape):
 
 
 # Generate initial random colors
+density = np.zeros((GRID_HEIGHT, GRID_WIDTH), dtype=np.float64)
 
 y_grid = np.array(
     [[0 for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT + 1)],
@@ -43,12 +45,36 @@ sh = np.ones((GRID_HEIGHT + 1, GRID_WIDTH), dtype=np.float64)
 sh[0, :] = 0
 sh[-1, :] = 0
 
+fromx = GRID_WIDTH // 2
+fromy = GRID_HEIGHT // 2
+for x in range(3):
+    for y in range(3):
+        sw[fromy, fromx + x] = 0
+        sw[fromy + 2, fromx + x] = 0
+
+        sh[fromy + y, fromx] = 0
+        sh[fromy + y, fromx + 2] = 0
+
+
+def box_element(pos):
+    print("fuck tittiesi")
+    x, y = int(pos[0]), int(pos[1])
+    print(x, y)
+    sh[y, x] = 0
+    sh[y + 1, x] = 0
+    sw[y, x] = 0
+    sw[y, x + 1] = 0
+    density[y, x] = 0
+
 
 def divcompute(x, y):
     v = -y_grid[y][x] + y_grid[y + 1][x] + x_grid[y][x] - x_grid[y][x + 1]
     hsubs = sh[y : y + 2, x]
     wsubs = sw[y, x : x + 2]
-    return v / (np.sum(wsubs) + np.sum(hsubs))
+    bot = np.sum(wsubs) + np.sum(hsubs)
+    if bot == 0:
+        return 0
+    return v / bot
 
 
 div = np.array(
@@ -60,11 +86,21 @@ def draw_grid():
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
             dv = int(div[y, x] * 100)
-            if div[y, x] < 0:
-                color = (0, 0, min(-dv, 255))
-            else:
-                color = (min(dv, 255), 0, 0)
+            # if div[y, x] < 0:
+            #     color = (0, 0, min(-dv, 255))
+            # else:
+            #     color = (min(dv, 255), 0, 0)
             # color = (255, 255, 255)
+
+            if (
+                sh[y, x] == 0
+                and sh[y + 1, x] == 0
+                and sw[y, x] == 0
+                and sw[y, x + 1] == 0
+            ):
+                color = [255, 0, 0]
+            else:
+                color = [clamp(int(density[y, x]), 0, 255)] * 3
             pygame.draw.rect(
                 screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             )
@@ -87,41 +123,6 @@ def clear_divergence():
 
 
 dampening = 0.9
-
-
-# def intervel(pos):
-#     global x_grid, y_grid
-#     px, py = pos[0], pos[1]
-
-#     X1 = clamp(int(px - 0.5), 0, GRID_WIDTH - 1)
-#     Y1 = clamp(int(py - 0.5), 0, GRID_HEIGHT - 1)
-#     X2 = clamp(X1 + 1, 0, GRID_WIDTH - 1)
-#     Y2 = clamp(Y1 + 1, 0, GRID_HEIGHT - 1)
-#     px = clamp(px, 0, GRID_WIDTH)
-#     py = clamp(py, 0, GRID_HEIGHT)
-
-#     X = int(clamp(px, 0, GRID_WIDTH - 1))
-#     Y = int(clamp(py, 0, GRID_HEIGHT - 1))
-
-#     a = abs(px - (X1 + 0.5))
-#     b = abs(py - (Y1 + 0.5))
-#     c = 1 - a
-#     d = 1 - b
-
-#     return np.array(
-#         [
-#             # X
-#             c * d * x_grid[Y - 1, X1]
-#             + a * d * x_grid[Y - 1, X2]
-#             + b * c * x_grid[Y, X1]
-#             + a * b * x_grid[Y, X2],
-#             # Y
-#             c * d * y_grid[Y1, X - 1]
-#             + b * c * y_grid[Y2, X - 1]
-#             + a * d * y_grid[Y1, X]
-#             + a * b * y_grid[Y2, X],
-#         ]
-#     )
 
 
 def intervel(pos, draw=False):
@@ -199,6 +200,8 @@ dt = 0.01
 def advect():
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
+            if sw[y, x] == 0:
+                continue
             pos = np.array([x, y + 0.5])
             v = intervel(pos)
             nv = intervel(pos - v * dt)
@@ -215,6 +218,8 @@ def advect():
 
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
+            if sh[y, x] == 0:
+                continue
             pos = np.array([x + 0.5, y])
             v = intervel(pos)
             nv = intervel(pos - v * dt)
@@ -228,6 +233,47 @@ def advect():
             # pygame.draw.line(
             #     screen, (0, 225, 0), pos * CELL_SIZE, (pos + nv * dt) * CELL_SIZE, 2
             # )
+
+
+def interpolate_density(pos):
+    x, y = pos[0], pos[1]
+    # if x < 0 or x > GRID_WIDTH - 1 or y < 0 or y > GRID_HEIGHT - 1:
+    #     return 0
+
+    X, Y = clamp(int(x - 0.5), 0, GRID_WIDTH - 2), clamp(
+        int(y - 0.5), 0, GRID_HEIGHT - 2
+    )
+    a = abs(x - X) - 0.5
+    b = abs(y - Y) - 0.5
+    c = 1 - a
+    d = 1 - b
+    return (
+        density[Y, X] * c * d
+        + density[Y + 1, X] * b * c
+        + density[Y, X + 1] * a * d
+        + density[Y + 1, X + 1] * a * b
+    )
+
+
+def update_density():
+
+    global density
+    d_cpy = density.copy()
+    for x in range(GRID_WIDTH):
+        for y in range(GRID_HEIGHT):
+            if (
+                sh[y, x] == 0
+                and sh[y + 1, x] == 0
+                and sw[y, x] == 0
+                and sw[y, x + 1] == 0
+            ):
+                continue
+            pos = np.array([x + 0.5, y + 0.5])
+            v = intervel(pos)
+            v[1] *= -1
+            d_cpy[y, x] = interpolate_density(pos - v * dt)
+
+    density = d_cpy * np.sum(density) / np.sum(d_cpy)
 
 
 # Main loop
@@ -250,13 +296,22 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    if pygame.mouse.get_pressed(3)[0]:
+        box_element(np.array(pygame.mouse.get_pos()) // CELL_SIZE)
 
     keys = pygame.key.get_pressed()
-    # if keys[pygame.K_SPACE]:
-    x_grid[GRID_HEIGHT // 2, 0] = 90
+    if keys[pygame.K_SPACE]:
+        density[:, :] = 0
+        x_grid[:, :] = 0
+        y_grid[:, :] = 0
+    x_grid[GRID_HEIGHT // 2, 0] = 200
 
     y_grid[GRID_HEIGHT // 2, 0] = 90
     y_grid[GRID_HEIGHT // 2 + 1, 0] = -90
+
+    density[:, -1] = 0
+    density[GRID_HEIGHT // 2, 0] += 600
+    # print(np.sum(density))
 
     # else:
     #     w_grid[GRID_HEIGHT // 2, 0] -= 5
@@ -264,6 +319,7 @@ while running:
 
     clear_divergence()
     advect()
+    update_density()
 
     pygame.display.flip()
     time.sleep(dt)
