@@ -157,6 +157,11 @@ def intervel(pos, draw=False):
     cx = 1 - ax
     dx = 1 - bx
 
+    ay = px - int(px)
+    by = abs(py - Y1) - 0.5
+    cy = 1 - ay
+    dy = 1 - by
+
     if draw:
         # X
         pygame.draw.circle(  # 0 0
@@ -170,6 +175,20 @@ def intervel(pos, draw=False):
         )
         pygame.draw.circle(
             screen, (0, 255, 0), np.array([X1 + 1.5, y + 1]) * CELL_SIZE, ax * bx * 20
+        )
+
+        # Y
+        pygame.draw.circle(  # 0 0
+            screen, (255, 255, 0), np.array([x, Y1 + 0.5]) * CELL_SIZE, dy * cy * 20
+        )
+        pygame.draw.circle(
+            screen, (255, 255, 0), np.array([x + 1, Y1 + 0.5]) * CELL_SIZE, ay * dy * 20
+        )
+        pygame.draw.circle(
+            screen, (255, 255, 0), np.array([x, Y1 + 1.5]) * CELL_SIZE, by * cy * 20
+        )
+        pygame.draw.circle(
+            screen, (255, 255, 0), np.array([x + 1, Y1 + 1.5]) * CELL_SIZE, ay * by * 20
         )
 
     return np.array(
