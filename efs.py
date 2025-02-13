@@ -130,27 +130,13 @@ def intervel(pos, draw=False):
 
     X1 = int(px - 0.5)
     Y1 = int(py - 0.5)
+    X2 = X1 + 1
+    Y2 = Y1 + 1
 
     x = int(px)
     y = int(py)
     if x == GRID_WIDTH - 1 or y == GRID_HEIGHT - 1:
         return np.array([0, 0])
-
-    y00 = y_grid[y, X1]
-    y01 = y_grid[y, X1 + 1]
-    y10 = y_grid[y + 1, X1]
-    y11 = y_grid[y + 1, X1 + 1]
-
-    x00 = x_grid[Y1, x]
-    x01 = x_grid[Y1, x + 1]
-    x10 = x_grid[Y1 + 1, x]
-    x11 = x_grid[Y1 + 1, x + 1]
-
-    a = abs(X1 - px)
-    b = abs(Y1 - py)
-
-    c = abs(1 - a)
-    d = abs(1 - b)
 
     ax = abs(px - X1) - 0.5
     bx = py - int(py)
@@ -194,105 +180,59 @@ def intervel(pos, draw=False):
     return np.array(
         [
             # X
-            x00 * c * d + x01 * a * d + x10 * b * c + x11 * a * b,
+            x_grid[Y1, x] * dy * cy  # top left
+            + x_grid[Y1, x + 1] * ay * dy  # top right
+            + x_grid[Y2, x] * by * cy  # bottom left
+            + x_grid[Y2, x + 1] * ay * by,  # bottom right
             # Y
-            y00 * c * d + y01 * a * d + y10 * b * c + y11 * a * b,
+            0,
+            # y_grid[Y1, x] * dy * cy
+            # + y_grid[Y1, x + 1] * ay * dy
+            # + y_grid[Y2, x] * by * cy
+            # + y_grid[Y2, x + 1] * ay * by,
         ]
     )
-
-
-# def intervel(pos):
-#     global x_grid, y_grid
-#     px, py = pos[0], pos[1]
-
-#     # X1 = clamp(int(px - 0.5), 0, GRID_WIDTH - 1)
-#     # Y1 = clamp(int(py - 0.5), 0, GRID_HEIGHT - 1)
-#     X1 = clamp(int(px - 0.5), 0, GRID_WIDTH - 1)
-#     Y1 = clamp(int(py - 0.5), 0, GRID_HEIGHT - 1)
-
-#     X2 = clamp(X1 + 1, 0, GRID_WIDTH - 1)
-#     Y2 = clamp(Y1 + 1, 0, GRID_HEIGHT - 1)
-#     px = clamp(px, 0, GRID_WIDTH)
-#     py = clamp(py, 0, GRID_HEIGHT)
-
-#     X = int(px)
-#     Y = int(py)
-
-#     a = abs(px - (X1 + 0.5))
-#     b = abs(py - (Y1 + 0.5))
-#     c = 1 - a
-#     d = 1 - b
-
-#     return np.array(
-#         [
-#             # X
-#             c * d * x_grid[Y1, X1]
-#             + a * d * x_grid[Y1, X2]
-#             + b * c * x_grid[Y2, X1]
-#             + a * b * x_grid[Y2, X2],
-#             # Y
-#             c * d * y_grid[Y1, X1]
-#             + b * c * y_grid[Y2, X1]
-#             + a * d * y_grid[Y1, X2]
-#             + a * b * y_grid[Y2, X2],
-#         ]
-#     )
 
 
 dt = 0.01
 
 
 def advect():
-    for x in range(GRID_WIDTH):
+    for x in range(1, GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
-            p = np.array([x + 0.5, y])
             pos = np.array([x + 0.5, y])
-            v = np.array([0, y_grid[y, x]]) * dt
-            pygame.draw.circle(screen, (0, 0, 255), pos * CELL_SIZE, 2)
-            # nv = intervel(pos - v)[0]
+            v = np.array([0, y_grid[y, x]])
+            pre_pos = pos - v * dt
+            print("X:", pos)
 
-            nv = np.array(
-                x_grid[y, x],
-                (
-                    y_grid[y, x - 1]
-                    + y_grid[y, x]
-                    + y_grid[y + 1, x - 1]
-                    + y_grid[y + 1, x]
-                )
-                / 4,
-            )
-            pygame.draw.line(screen, (0, 0, 255), p * CELL_SIZE, (p + v) * CELL_SIZE, 2)
+            # pygame.draw.circle(screen, (0, 0, 255), pos * CELL_SIZE, 2)
+            # pygame.draw.circle(screen, (255, 0, 0), pre_pos * CELL_SIZE, 2)
+
             pygame.draw.line(
-                screen,
-                (0, 0, 255),
-                p * CELL_SIZE,
-                (p + intervel(p) * dt) * CELL_SIZE,
-                2,
+                screen, (225, 0, 0), pos * CELL_SIZE, (pos + v * dt) * CELL_SIZE, 2
             )
-            # w_grid[y, x] = nv
-    for x in range(1, GRID_WIDTH - 1):
-        for y in range(GRID_HEIGHT):
-            p = np.array([x, y + 0.5])
 
+            nv = np.array([0, intervel(pre_pos)[0]])
+            # pygame.draw.line(
+            #     screen, (225, 0, 0), pos * CELL_SIZE, (pos + nv * dt) * CELL_SIZE, 2
+            # )
+
+    for x in range(1, GRID_WIDTH):
+        for y in range(1, GRID_HEIGHT - 1):
             pos = np.array([x, y + 0.5])
-            pygame.draw.circle(screen, (255, 0, 0), p * CELL_SIZE, 2)
-            v = np.array([x_grid[y, x], 0]) * dt
+            v = np.array([x_grid[y, x], 0])
+            pre_pos = pos - v * dt
 
-            # nv = intervel(pos - v)[1]
-            nv = np.array(
-                (
-                    x_grid[y - 1, x]
-                    + x_grid[y - 1, x + 1]
-                    + x_grid[y, x]
-                    + x_grid[y, x + 1]
-                )
-                / 4,
-                y_grid[y, x],
+            # pygame.draw.circle(screen, (0, 255, 0), pos * CELL_SIZE, 2)
+            # pygame.draw.circle(screen, (0, 225, 0), pre_pos * CELL_SIZE, 2)
+
+            pygame.draw.line(
+                screen, (0, 255, 0), pos * CELL_SIZE, (pos + v * dt) * CELL_SIZE, 2
             )
-
-            pygame.draw.line(screen, (255, 0, 0), p * CELL_SIZE, (p + v) * CELL_SIZE, 2)
-
-            # h_grid[y, x] = nv
+            nv = np.array([intervel(pre_pos)[1], 0])
+            # pygame.draw.line(
+            #     screen, (0, 225, 0), pos * CELL_SIZE, (pos + nv * dt) * CELL_SIZE, 2
+            # )
 
 
 # Main loop
