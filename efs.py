@@ -69,7 +69,7 @@ def box_element(pos):
 
 def divcompute(x, y):
     v = -y_grid[y][x] + y_grid[y + 1][x] + x_grid[y][x] - x_grid[y][x + 1]
-    hsubs = sh[y : y + 2, x]
+    hsubs = sh[y + 1 : y + 3, x]
     wsubs = sw[y, x : x + 2]
     bot = np.sum(wsubs) + np.sum(hsubs)
     if bot == 0:
