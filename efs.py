@@ -202,13 +202,14 @@ def advect():
             pos = np.array([x + 0.5, y])
             v = np.array([0, y_grid[y, x]])
             pre_pos = pos - v * dt
-            print("X:", pos)
+
+            pre_v = intervel(pre_pos)
 
             # pygame.draw.circle(screen, (0, 0, 255), pos * CELL_SIZE, 2)
             # pygame.draw.circle(screen, (255, 0, 0), pre_pos * CELL_SIZE, 2)
 
             pygame.draw.line(
-                screen, (225, 0, 0), pos * CELL_SIZE, (pos + v * dt) * CELL_SIZE, 2
+                screen, (225, 0, 0), pos * CELL_SIZE, (pos + pre_v * dt) * CELL_SIZE, 2
             )
 
             nv = np.array([0, intervel(pre_pos)[0]])
@@ -221,12 +222,13 @@ def advect():
             pos = np.array([x, y + 0.5])
             v = np.array([x_grid[y, x], 0])
             pre_pos = pos - v * dt
+            pre_v = intervel(pre_pos)
 
             # pygame.draw.circle(screen, (0, 255, 0), pos * CELL_SIZE, 2)
             # pygame.draw.circle(screen, (0, 225, 0), pre_pos * CELL_SIZE, 2)
 
             pygame.draw.line(
-                screen, (0, 255, 0), pos * CELL_SIZE, (pos + v * dt) * CELL_SIZE, 2
+                screen, (0, 255, 0), pos * CELL_SIZE, (pos + pre_v * dt) * CELL_SIZE, 2
             )
             nv = np.array([intervel(pre_pos)[1], 0])
             # pygame.draw.line(
