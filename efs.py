@@ -185,7 +185,6 @@ def intervel(pos, draw=False):
             + x_grid[Y2, x] * by * cy  # bottom left
             + x_grid[Y2, x + 1] * ay * by,  # bottom right
             # Y
-            0,
             y_grid[y, X1] * dx * cx
             + y_grid[y, X2] * ax * dx
             + y_grid[y + 1, X1] * bx * cx
@@ -241,7 +240,7 @@ while running:
     # screen.fill((255, 255, 255))
     draw_grid()
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
-    vel = intervel(pos, True)
+    vel = intervel(pos)
     pygame.draw.line(
         screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 8
     )
