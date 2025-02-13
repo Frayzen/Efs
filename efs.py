@@ -186,10 +186,10 @@ def intervel(pos, draw=False):
             + x_grid[Y2, x + 1] * ay * by,  # bottom right
             # Y
             0,
-            # y_grid[Y1, x] * dy * cy
-            # + y_grid[Y1, x + 1] * ay * dy
-            # + y_grid[Y2, x] * by * cy
-            # + y_grid[Y2, x + 1] * ay * by,
+            y_grid[y, X1] * dx * cx
+            + y_grid[y, X2] * ax * dx
+            + y_grid[y + 1, X1] * bx * cx
+            + y_grid[y + 1, X2] * ax * bx,
         ]
     )
 
