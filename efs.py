@@ -4,7 +4,7 @@ import numpy as np
 from pygame.math import clamp
 
 # Grid settings
-CELL_SIZE = 30  # Pixel size of each cell
+CELL_SIZE = 20  # Pixel size of each cell
 GRID_WIDTH = 40  # Number of cells horizontally
 GRID_HEIGHT = 40  # Number of cells vertically
 
@@ -76,7 +76,7 @@ def draw_grid():
             )  # Grid outline
 
 
-def update_velocity():
+def clear_divergence():
     global h_grid, w_grid
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
@@ -86,41 +86,26 @@ def update_velocity():
             w_grid[y, x + 1] += div[y, x] * sw[y, x + 1]
 
 
-dampling = 0.999
+dampening = 0.9
 
 
 def intervel(pos):
     global w_grid, h_grid
     px, py = pos[0], pos[1]
 
-    X1 = int(clamp(px - 0.5, 0, GRID_WIDTH))
-    Y1 = int(clamp(py - 0.5, 0, GRID_HEIGHT))
-    X2 = int(clamp(px + 0.5, 0, GRID_WIDTH))
-    Y2 = int(clamp(py + 0.5, 0, GRID_HEIGHT))
-    # pygame.draw.circle(
-    #     screen,
-    #     (255, 0, 255),
-    #     ((X2) * CELL_SIZE, (Y2) * CELL_SIZE),
-    #     3,
-    # )
-
-    # pygame.draw.circle(
-    #     screen,
-    #     (0, 255, 255),
-    #     ((X2) * CELL_SIZE, (Y1) * CELL_SIZE),
-    #     3,
-    # )
-
+    X1 = int(clamp(px - 0.5, 0, GRID_WIDTH - 1))
+    Y1 = int(clamp(py - 0.5, 0, GRID_HEIGHT - 1))
+    X2 = int(clamp(px + 0.5, 0, GRID_WIDTH - 1))
+    Y2 = int(clamp(py + 0.5, 0, GRID_HEIGHT - 1))
     px = clamp(px, 0, GRID_WIDTH)
     py = clamp(py, 0, GRID_HEIGHT)
 
     a = abs(px - (X1 + 0.5))
     b = abs(py - (Y1 + 0.5))
-    print(b)
     c = 1 - a
     d = 1 - b
 
-    return 100 * np.array(
+    return np.array(
         [
             # X
             c * d * w_grid[Y1, X1]
@@ -136,6 +121,32 @@ def intervel(pos):
     )
 
 
+dt = 0.01
+
+
+def advect():
+    for x in range(1, GRID_WIDTH - 1):
+        for y in range(GRID_HEIGHT):
+            pos = np.array([x, y + 0.5])
+            v = intervel(pos) * dt
+            pygame.draw.circle(screen, (0, 0, 255), pos * CELL_SIZE, 2)
+            nv = intervel(pos - v)[0]
+            pygame.draw.line(
+                screen, (0, 0, 255), pos * CELL_SIZE, (pos + v) * CELL_SIZE, 2
+            )
+            w_grid[y, x] = nv
+    for x in range(GRID_WIDTH):
+        for y in range(1, GRID_HEIGHT - 1):
+            pos = np.array([x + 0.5, y])
+            pygame.draw.circle(screen, (255, 0, 0), pos * CELL_SIZE, 2)
+            v = intervel(pos) * dt
+            pygame.draw.line(
+                screen, (255, 0, 0), pos * CELL_SIZE, (pos + v) * CELL_SIZE, 2
+            )
+            nv = intervel(pos - v)[1]
+            h_grid[y, x] = nv
+
+
 # Main loop
 running = True
 while running:
@@ -144,13 +155,12 @@ while running:
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     vel = intervel(pos)
     vel[1] *= -1
-    print(vel)
-    pygame.draw.line(screen, (0, 255, 0), pos * CELL_SIZE, (pos + vel) * CELL_SIZE)
-    pygame.display.flip()
-
+    pygame.draw.line(
+        screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 8
+    )
     div = np.array(
         [
-            [divcompute(x, y) * dampling for x in range(GRID_WIDTH)]
+            [divcompute(x, y) * dampening for x in range(GRID_WIDTH)]
             for y in range(GRID_HEIGHT)
         ]
     )
@@ -158,12 +168,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             # elif event.type == pygame.KEYDOWN:  # Press any key to change colors dynamically
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
-        w_grid[h_grid.shape[0] // 2, 0] += 1
-        w_grid[h_grid.shape[0] // 2 + 1, 0] += 1
-        w_grid[h_grid.shape[0] // 2 + 2, 0] += 1
-    update_velocity()
-    time.sleep(0.03)
+        w_grid[GRID_HEIGHT // 2, 0] += 10
+    else:
+        w_grid[GRID_HEIGHT // 2, 0] -= 5
+        w_grid[GRID_HEIGHT // 2, 0] = max(w_grid[GRID_HEIGHT // 2, 0], 0)
+
+    clear_divergence()
+    advect()
+
+    pygame.display.flip()
+    time.sleep(dt)
+
 
 pygame.quit()
