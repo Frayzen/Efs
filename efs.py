@@ -236,9 +236,8 @@ while running:
     # screen.fill((255, 255, 255))
     draw_grid()
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
-    print(pos)
     vel = intervel(pos)
-    vel[1] *= -1
+    vel[1] *= -1  # because vector is in cartesion but pygame is upside down
     pygame.draw.line(
         screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 8
     )
