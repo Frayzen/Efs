@@ -64,7 +64,7 @@ def draw_grid():
                 color = (0, 0, min(-dv, 255))
             else:
                 color = (min(dv, 255), 0, 0)
-            color = (255, 255, 255)
+            # color = (255, 255, 255)
             pygame.draw.rect(
                 screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             )
@@ -128,13 +128,13 @@ def intervel(pos, draw=False):
     global x_grid, y_grid
     px, py = pos[0], pos[1]
 
-    X1 = int(px - 0.5)
-    Y1 = int(py - 0.5)
+    X1 = clamp(int(px - 0.5), 0, GRID_WIDTH - 2)
+    Y1 = clamp(int(py - 0.5), 0, GRID_HEIGHT - 2)
     X2 = X1 + 1
     Y2 = Y1 + 1
 
-    x = int(px)
-    y = int(py)
+    x = clamp(int(px), 0, GRID_WIDTH - 2)
+    y = clamp(int(py), 0, GRID_HEIGHT - 2)
     if x == GRID_WIDTH - 1 or y == GRID_HEIGHT - 1:
         return np.array([0, 0])
 
@@ -197,40 +197,34 @@ dt = 0.01
 
 
 def advect():
-    for x in range(1, GRID_WIDTH):
-        for y in range(1, GRID_HEIGHT - 1):
-            pos = np.array([x + 0.5, y])
-            v = np.array([0, y_grid[y, x]])
-            pre_pos = pos - v * dt
-
-            pre_v = intervel(pre_pos)
+    for x in range(1, GRID_WIDTH - 1):
+        for y in range(GRID_HEIGHT):
+            pos = np.array([x, y + 0.5])
+            v = intervel(pos)
+            nv = intervel(pos - v * dt)
+            x_grid[y, x] = nv[0]
 
             # pygame.draw.circle(screen, (0, 0, 255), pos * CELL_SIZE, 2)
             # pygame.draw.circle(screen, (255, 0, 0), pre_pos * CELL_SIZE, 2)
-
-            pygame.draw.line(
-                screen, (225, 0, 0), pos * CELL_SIZE, (pos + pre_v * dt) * CELL_SIZE, 2
-            )
-
-            nv = np.array([0, intervel(pre_pos)[0]])
+            # pygame.draw.line(
+            #     screen, (225, 0, 0), pos * CELL_SIZE, (pos + pre_v * dt) * CELL_SIZE, 2
+            # )
             # pygame.draw.line(
             #     screen, (225, 0, 0), pos * CELL_SIZE, (pos + nv * dt) * CELL_SIZE, 2
             # )
 
-    for x in range(1, GRID_WIDTH):
+    for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
-            pos = np.array([x, y + 0.5])
-            v = np.array([x_grid[y, x], 0])
-            pre_pos = pos - v * dt
-            pre_v = intervel(pre_pos)
+            pos = np.array([x + 0.5, y])
+            v = intervel(pos)
+            nv = intervel(pos - v * dt)
+            y_grid[y, x] = nv[1]
 
             # pygame.draw.circle(screen, (0, 255, 0), pos * CELL_SIZE, 2)
             # pygame.draw.circle(screen, (0, 225, 0), pre_pos * CELL_SIZE, 2)
-
-            pygame.draw.line(
-                screen, (0, 255, 0), pos * CELL_SIZE, (pos + pre_v * dt) * CELL_SIZE, 2
-            )
-            nv = np.array([intervel(pre_pos)[1], 0])
+            # pygame.draw.line(
+            #     screen, (0, 255, 0), pos * CELL_SIZE, (pos + pre_v * dt) * CELL_SIZE, 2
+            # )
             # pygame.draw.line(
             #     screen, (0, 225, 0), pos * CELL_SIZE, (pos + nv * dt) * CELL_SIZE, 2
             # )
@@ -243,6 +237,7 @@ while running:
     draw_grid()
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     vel = intervel(pos)
+    vel[1] *= -1
     pygame.draw.line(
         screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 8
     )
@@ -257,8 +252,11 @@ while running:
             running = False
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_SPACE]:
-        x_grid[GRID_HEIGHT // 2, 1] += 1
+    # if keys[pygame.K_SPACE]:
+    x_grid[GRID_HEIGHT // 2, 0] = 90
+
+    y_grid[GRID_HEIGHT // 2, 0] = 90
+    y_grid[GRID_HEIGHT // 2 + 1, 0] = -90
 
     # else:
     #     w_grid[GRID_HEIGHT // 2, 0] -= 5
