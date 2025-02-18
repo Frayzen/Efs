@@ -16,14 +16,14 @@ def divcompute_cell(x, y):
     return v / bot
 
 
-def divcompute():
+def compute_divergence():
     return np.array(
         [[divcompute_cell(x, y) for x in range(GRID_WIDTH)] for y in range(GRID_HEIGHT)]
     )
 
 
 def clear_divergence():
-    div = divcompute()
+    div = compute_divergence()
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
             # if check_mouse_coords(x, y):
