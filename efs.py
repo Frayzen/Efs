@@ -1,4 +1,3 @@
-from sys import get_coroutine_origin_tracking_depth
 import pygame
 import time
 import numpy as np
@@ -17,9 +16,9 @@ dampening = 1
 # Main loop
 running = True
 
-x_grid[GRID_HEIGHT // 2, 8] = 3000
-y_grid[GRID_HEIGHT // 2, 8] = 3000
-y_grid[GRID_HEIGHT // 2 + 1, 8] = -3000
+x_mac[GRID_HEIGHT // 2, 8] = 3000
+y_mac[GRID_HEIGHT // 2, 8] = 3000
+y_mac[GRID_HEIGHT // 2 + 1, 8] = -3000
 
 density[GRID_HEIGHT // 2, 4] = 50000
 density[GRID_HEIGHT // 2 + 1, 4] = 50000
@@ -55,12 +54,12 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
         density[:, :] = 0
-        x_grid[:, :] = 0
-        y_grid[:, :] = 0
+        x_mac[:, :] = 0
+        y_mac[:, :] = 0
 
-        x_grid[GRID_HEIGHT // 2, 8] = 3000
-        y_grid[GRID_HEIGHT // 2, 8] = 3000
-        y_grid[GRID_HEIGHT // 2 + 1, 8] = -3000
+        x_mac[GRID_HEIGHT // 2, 8] = 3000
+        y_mac[GRID_HEIGHT // 2, 8] = 3000
+        y_mac[GRID_HEIGHT // 2 + 1, 8] = -3000
 
         density[GRID_HEIGHT // 2, 4] = 50000
         density[GRID_HEIGHT // 2 + 1, 4] = 50000

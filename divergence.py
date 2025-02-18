@@ -4,9 +4,9 @@ from velocity import *
 
 
 def divcompute_cell(x, y):
-    v = -y_grid[y][x] + y_grid[y + 1][x] + x_grid[y][x] - x_grid[y][x + 1]
-    hsubs = sy[y : y + 2, x]
-    wsubs = sx[y, x : x + 2]
+    v = -y_mac[y][x] + y_mac[y + 1][x] + x_mac[y][x] - x_mac[y][x + 1]
+    hsubs = ymsk[y : y + 2, x]
+    wsubs = xmsk[y, x : x + 2]
     bot = np.sum(wsubs) + np.sum(hsubs)
     # if check_mouse_coords(x, y):
     #     print(bot)
@@ -27,11 +27,11 @@ def clear_divergence():
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
             # if check_mouse_coords(x, y):
-            #     print("PREV", y_grid[y, x])
-            y_grid[y, x] += div[y, x] * sy[y, x]
-            y_grid[y + 1, x] -= div[y, x] * sy[y + 1, x]
-            x_grid[y, x] -= div[y, x] * sx[y, x]
-            x_grid[y, x + 1] += div[y, x] * sx[y, x + 1]
+            #     print("PREV", y_mac[y, x])
+            y_mac[y, x] += div[y, x] * ymsk[y, x]
+            y_mac[y + 1, x] -= div[y, x] * ymsk[y + 1, x]
+            x_mac[y, x] -= div[y, x] * xmsk[y, x]
+            x_mac[y, x + 1] += div[y, x] * xmsk[y, x + 1]
             # if check_mouse_coords(x, y):
-            #     print("AFTR", y_grid[y, x])
-            #     print(div[y, x], sx[y, x], sy[y, x], sx[y, x + 1], sy[y + 1, x])
+            #     print("AFTR", y_mac[y, x])
+            #     print(div[y, x], xmsk[y, x], ymsk[y, x], xmsk[y, x + 1], ymsk[y + 1, x])

@@ -1,4 +1,3 @@
-from sys import get_coroutine_origin_tracking_depth
 import pygame
 import time
 import numpy as np
@@ -26,10 +25,10 @@ def draw_grid():
             # dv = int(div[y, x] * 100)
 
             if (
-                sy[y, x] == 0
-                and sy[y + 1, x] == 0
-                and sx[y, x] == 0
-                and sx[y, x + 1] == 0
+                ymsk[y, x] == 0
+                and ymsk[y + 1, x] == 0
+                and xmsk[y, x] == 0
+                and xmsk[y, x + 1] == 0
             ):
                 color = [255, 0, 0]
             else:

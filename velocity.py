@@ -11,25 +11,25 @@ def advect():
             pos = np.array([x, y + 0.5])
             v = intervel(pos)
             nv = intervel(pos - v * dt)
-            if sx[y, x] == 0:
-                x_grid[y, x] *= 0.1
+            if xmsk[y, x] == 0:
+                x_mac[y, x] *= 0.1
             else:
-                x_grid[y, x] = nv[0]
+                x_mac[y, x] = nv[0]
 
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
             pos = np.array([x + 0.5, y])
             v = intervel(pos)
             nv = intervel(pos - v * dt)
-            if sy[y, x] == 0:
-                y_grid[y, x] *= 0.1
+            if ymsk[y, x] == 0:
+                y_mac[y, x] *= 0.1
             else:
-                y_grid[y, x] = nv[1]
+                y_mac[y, x] = nv[1]
 
 
 def intervel(pos, draw=False):
 
-    global x_grid, y_grid
+    global x_mac, y_mac
     px, py = pos[0], pos[1]
 
     X1 = clamp(int(px - 0.5), 0, GRID_WIDTH - 2)
@@ -81,14 +81,14 @@ def intervel(pos, draw=False):
     return np.array(
         [
             # X
-            x_grid[Y1, x] * dy * cy  # top left
-            + x_grid[Y1, x + 1] * ay * dy  # top right
-            + x_grid[Y2, x] * by * cy  # bottom left
-            + x_grid[Y2, x + 1] * ay * by,  # bottom right
+            x_mac[Y1, x] * dy * cy  # top left
+            + x_mac[Y1, x + 1] * ay * dy  # top right
+            + x_mac[Y2, x] * by * cy  # bottom left
+            + x_mac[Y2, x + 1] * ay * by,  # bottom right
             # Y
-            y_grid[y, X1] * dx * cx
-            + y_grid[y, X2] * ax * dx
-            + y_grid[y + 1, X1] * bx * cx
-            + y_grid[y + 1, X2] * ax * bx,
+            y_mac[y, X1] * dx * cx
+            + y_mac[y, X2] * ax * dx
+            + y_mac[y + 1, X1] * bx * cx
+            + y_mac[y + 1, X2] * ax * bx,
         ]
     )

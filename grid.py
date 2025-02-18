@@ -5,21 +5,21 @@ from const import *
 # Generate initial random colors
 density = np.zeros((GRID_HEIGHT, GRID_WIDTH), dtype=np.float64)
 
-y_grid = np.array(
+y_mac = np.array(
     [[0 for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT + 1)],
     dtype=np.float64,
 )
-x_grid = np.array(
+x_mac = np.array(
     [[0 for _ in range(GRID_WIDTH + 1)] for _ in range(GRID_HEIGHT)],
     dtype=np.float64,
 )
 
-sx = np.ones((GRID_HEIGHT, GRID_WIDTH + 1), dtype=np.float64)
-sx[:, 0] = 0
-sx[:, -1] = 0
-sy = np.ones((GRID_HEIGHT + 1, GRID_WIDTH), dtype=np.float64)
-sy[0, :] = 0
-sy[-1, :] = 0
+xmsk = np.ones((GRID_HEIGHT, GRID_WIDTH + 1), dtype=np.float64)
+xmsk[:, 0] = 0
+xmsk[:, -1] = 0
+ymsk = np.ones((GRID_HEIGHT + 1, GRID_WIDTH), dtype=np.float64)
+ymsk[0, :] = 0
+ymsk[-1, :] = 0
 
 
 diags = []

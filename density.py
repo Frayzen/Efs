@@ -32,10 +32,10 @@ def update_density():
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
             if (
-                sy[y, x] == 0
-                and sy[y + 1, x] == 0
-                and sx[y, x] == 0
-                and sx[y, x + 1] == 0
+                ymsk[y, x] == 0
+                and ymsk[y + 1, x] == 0
+                and xmsk[y, x] == 0
+                and xmsk[y, x + 1] == 0
             ):
                 continue
             pos = np.array([x + 0.5, y + 0.5])
