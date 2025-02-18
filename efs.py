@@ -27,7 +27,7 @@ while running:
     # screen.fill()
     draw_grid()
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
-    vel = intervel(pos)
+    vel = interpolate_velocity(pos)
     vel[1] *= -1  # because vector is in cartesion but pygame is upside down
     pygame.draw.line(
         screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 2

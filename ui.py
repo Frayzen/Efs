@@ -4,7 +4,7 @@ import numpy as np
 from pygame.math import clamp
 
 from grid import *
-from velocity import intervel
+from velocity import interpolate_velocity
 
 # Initialize pygame
 pygame.init()
@@ -62,7 +62,7 @@ def draw_vel():
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
             pos = np.array([x, y + 0.5])
-            v = intervel(pos)
+            v = interpolate_velocity(pos)
             v[1] *= -1
             pygame.draw.line(
                 screen, (225, 0, 0), pos * CELL_SIZE, (pos + v * ratio) * CELL_SIZE, 2
@@ -71,7 +71,7 @@ def draw_vel():
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
             pos = np.array([x + 0.5, y])
-            v = intervel(pos)
+            v = interpolate_velocity(pos)
             v[1] *= -1
             pygame.draw.line(
                 screen,

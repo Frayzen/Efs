@@ -39,7 +39,7 @@ def update_density():
             ):
                 continue
             pos = np.array([x + 0.5, y + 0.5])
-            v = intervel(pos)
+            v = interpolate_velocity(pos)
             v[1] *= -1
             d_cpy[y, x] = interpolate_density(pos - v * 30 * dt)
     d_sum = np.sum(d_cpy)

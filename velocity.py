@@ -9,8 +9,8 @@ def advect():
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
             pos = np.array([x, y + 0.5])
-            v = intervel(pos)
-            nv = intervel(pos - v * dt)
+            v = interpolate_velocity(pos)
+            nv = interpolate_velocity(pos - v * dt)
             if xmsk[y, x] == 0:
                 x_mac[y, x] *= 0.1
             else:
@@ -19,15 +19,15 @@ def advect():
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
             pos = np.array([x + 0.5, y])
-            v = intervel(pos)
-            nv = intervel(pos - v * dt)
+            v = interpolate_velocity(pos)
+            nv = interpolate_velocity(pos - v * dt)
             if ymsk[y, x] == 0:
                 y_mac[y, x] *= 0.1
             else:
                 y_mac[y, x] = nv[1]
 
 
-def intervel(pos, draw=False):
+def interpolate_velocity(pos, draw=False):
 
     global x_mac, y_mac
     px, py = pos[0], pos[1]
