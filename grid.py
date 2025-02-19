@@ -99,5 +99,6 @@ offsets.append(-GRID_WIDTH)
 
 # print(diags)
 mat = sp.diags(diags, offsets, shape=(n, n))
+print(mat.toarray())
 # for i in range(n):
 #     print("mat (", i, ")) = \n", mat.toarray()[i])

@@ -16,9 +16,15 @@ dampening = 1
 # Main loop
 running = True
 
-x_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3000
-y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3000
-y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3000
+# x_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = -3
+# x_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = 3
+# y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3
+# y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3
+# x_mac[1, 1] = -3
+# x_mac[1, 2] = 3
+y_mac[1, 1] = 3
+y_mac[2, 1] = -3
+
 
 density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
 density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
