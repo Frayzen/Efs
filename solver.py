@@ -59,7 +59,7 @@ div = np.arange(n)
 res = np.linalg.solve(mat.toarray(), div)
 
 
-# print(mat * res)
+print(mat)
 # print(res)
 # print(div)
 

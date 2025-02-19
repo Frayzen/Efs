@@ -16,12 +16,12 @@ dampening = 1
 # Main loop
 running = True
 
-x_mac[GRID_HEIGHT // 2, 8] = 3000
-y_mac[GRID_HEIGHT // 2, 8] = 3000
-y_mac[GRID_HEIGHT // 2 + 1, 8] = -3000
+x_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3000
+y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3000
+y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3000
 
-density[GRID_HEIGHT // 2, 4] = 50000
-density[GRID_HEIGHT // 2 + 1, 4] = 50000
+density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
+density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
 
 while running:
     # screen.fill()
@@ -36,7 +36,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     # density[:, -1] = 0
-    print(np.sum(density))
 
     # else:
     #     w_grid[GRID_HEIGHT // 2, 0] -= 5
@@ -47,7 +46,7 @@ while running:
 
     pygame.display.flip()
 
-    advect()
+    # advect()
     update_density()
     # time.sleep(dt)
 

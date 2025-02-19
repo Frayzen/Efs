@@ -51,18 +51,26 @@ s_flat = s.ravel()
 diags.append([s_flat[i] for i in range(n)])
 offsets.append(0)
 
-diags.append([1 for _ in range(n - 1)])
+right_diag = np.array([-1 for i in range(n - 1)])
+right_diag[GRID_WIDTH - 1 :: GRID_WIDTH] = 0
+diags.append(right_diag)  # right
+
 offsets.append(1)
 
-diags.append([1 for _ in range(n - 1)])
+left_diag = np.array([-1 for i in range(1, n)])
+left_diag[GRID_WIDTH - 1 :: GRID_WIDTH] = 0
+diags.append(left_diag)  # left
 offsets.append(-1)
 
-diags.append([1 for _ in range(n - GRID_WIDTH)])
+
+diags.append([-1 for i in range(n - GRID_WIDTH)])  # top
 offsets.append(GRID_WIDTH)
 
-diags.append([1 for _ in range(n - GRID_WIDTH)])
+diags.append([-1 for i in range(GRID_WIDTH, n)])  # bot
 offsets.append(-GRID_WIDTH)
 
 
 # print(diags)
 mat = sp.diags(diags, offsets, shape=(n, n))
+for i in range(n):
+    print("mat (", i, ")) = \n", mat.toarray()[i])
