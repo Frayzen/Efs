@@ -22,7 +22,7 @@ def compute_divergence():
 def clear_divergence():
     div = compute_divergence().ravel()
     print(np.sum(div))
-    print("mat = \n", mat.toarray()[4])
+    # print("mat = \n", mat.toarray()[4])
     # exit()
     res = cp.asnumpy(la.spsolve(mat, cp.asarray(div)))
     res = res.reshape(GRID_HEIGHT, GRID_WIDTH)
@@ -48,23 +48,21 @@ def clear_divergence():
     # y_mac[1:-1, :] += res[:-1, :]  # top one
 
     # OLD PART
+    print(np.array(div, dtype=int).reshape(GRID_HEIGHT, GRID_WIDTH))
 
     for x in range(GRID_WIDTH):
+        for y in range(1, GRID_HEIGHT - 1):
+            y_mac[y, x] += res[y, x]
+            y_mac[y + 1, x] += res[y, x]
+    for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
-            # if check_mouse_coords(x, y):
-            #     print("PREV", y_mac[y, x])
-            y_mac[y, x] += res[y, x] * ymsk[y, x]
-            y_mac[y + 1, x] -= res[y, x] * ymsk[y + 1, x]
-            x_mac[y, x] -= res[y, x] * xmsk[y, x]
-            x_mac[y, x + 1] += res[y, x] * xmsk[y, x + 1]
-            # if check_mouse_coords(x, y):
-            #     print("AFTR", y_mac[y, x])
-            #     print(div[y, x], xmsk[y, x], ymsk[y, x], xmsk[y, x + 1], ymsk[y + 1, x])
+            x_mac[y, x] += res[y, x]
+            x_mac[y, x + 1] += res[y, x]
 
     print("final A div = ", int(divcompute_cell(0, 0)))
     print("final C div = ", int(divcompute_cell(0, 1)))
     print("final B div = ", int(divcompute_cell(1, 0)))
-    print(res)
+    print(np.array(res, dtype=int))
     div = compute_divergence()
     print(np.array(div, dtype=int))
 
