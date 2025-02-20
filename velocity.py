@@ -11,20 +11,20 @@ def advect():
             pos = np.array([x, y + 0.5])
             v = interpolate_velocity(pos)
             nv = interpolate_velocity(pos - v * dt)
-            if xmsk[y, x] == 0:
-                x_mac[y, x] *= 0.1
-            else:
-                x_mac[y, x] = nv[0]
+            # if xmsk[y, x] == 0:
+            #     x_mac[y, x] *= 0.1
+            # else:
+            x_mac[y, x] = nv[0]
 
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
             pos = np.array([x + 0.5, y])
             v = interpolate_velocity(pos)
             nv = interpolate_velocity(pos - v * dt)
-            if ymsk[y, x] == 0:
-                y_mac[y, x] *= 0.1
-            else:
-                y_mac[y, x] = nv[1]
+            # if ymsk[y, x] == 0:
+            #     y_mac[y, x] *= 0.1
+            # else:
+            y_mac[y, x] = nv[1]
 
 
 def interpolate_velocity(pos, draw=False):

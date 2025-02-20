@@ -31,18 +31,8 @@ def update_density():
     d_cpy = density.copy()
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
-            if (
-                ymsk[y, x] == 0
-                and ymsk[y + 1, x] == 0
-                and xmsk[y, x] == 0
-                and xmsk[y, x + 1] == 0
-            ):
-                continue
             pos = np.array([x + 0.5, y + 0.5])
             v = interpolate_velocity(pos)
             v[1] *= -1
             d_cpy[y, x] = interpolate_density(pos - v * 30 * dt)
-    d_sum = np.sum(d_cpy)
-    if d_sum and d_sum > 0:
-        density = d_cpy * np.sum(density) / d_sum
-    # density = d_cpy
+    density = d_cpy

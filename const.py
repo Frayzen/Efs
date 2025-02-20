@@ -2,7 +2,7 @@ import numpy as np
 import cupyx.scipy.sparse as sp
 
 CELL_SIZE = 50  # Pixel size of each cell
-GRID_WIDTH = 10  # Number of cells horizontally
+GRID_WIDTH = 5  # Number of cells horizontally
 GRID_HEIGHT = 10  # Number of cells vertically
 
 # Window settings

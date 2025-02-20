@@ -27,10 +27,12 @@ running = True
 # y_mac[1, 1] = 800
 
 
-# density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
-# density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
-# density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
+# density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 500
+# density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 500
+# density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 500
 
+y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 1000
+dt = 1 / max(np.max(y_mac), np.max(x_mac))
 while running:
     # screen.fill()
     draw_grid()
@@ -50,14 +52,16 @@ while running:
     #     w_grid[GRID_HEIGHT // 2, 0] = max(w_grid[GRID_HEIGHT // 2, 0], 0)
 
     # for i in range(3):
-    advect()
+    # y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 1000
     clear_divergence()
+    # advect()
     draw_vel_no_interp()
+    # draw_vel()
+    # draw_vel_cell()
+
+    update_density()
 
     pygame.display.flip()
-
-    # update_density()
-    # time.sleep(dt)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
