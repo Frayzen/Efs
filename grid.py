@@ -1,5 +1,6 @@
 from pygame.math import clamp
 
+import cupy as cp
 from const import *
 
 # Generate initial random colors
@@ -99,6 +100,9 @@ offsets.append(-GRID_WIDTH)
 
 # print(diags)
 mat = sp.diags(diags, offsets, shape=(n, n))
+print("DET IS ", np.linalg.det(mat.toarray()))
+
+
 print(mat.toarray())
 # for i in range(n):
 #     print("mat (", i, ")) = \n", mat.toarray()[i])

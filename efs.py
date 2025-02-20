@@ -22,12 +22,14 @@ running = True
 # y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3
 # x_mac[1, 1] = -3
 # x_mac[1, 2] = 3
-y_mac[1, 1] = 3
-y_mac[2, 1] = -3
+# y_mac[1, 1] = 3000
+# y_mac[2, 1] = -3000
+y_mac[1, 1] = 8
 
 
-density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
-density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
+# density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
+# density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
+# density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
 
 while running:
     # screen.fill()
@@ -47,12 +49,13 @@ while running:
     #     w_grid[GRID_HEIGHT // 2, 0] -= 5
     #     w_grid[GRID_HEIGHT // 2, 0] = max(w_grid[GRID_HEIGHT // 2, 0], 0)
 
+    # for i in range(3):
+    #     advect()
     clear_divergence()
     draw_vel()
 
     pygame.display.flip()
 
-    # advect()
     update_density()
     # time.sleep(dt)
 

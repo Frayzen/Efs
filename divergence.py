@@ -20,12 +20,19 @@ def compute_divergence():
 
 
 def clear_divergence():
+    global x_mac, y_mac
     div = compute_divergence().ravel()
     print("cunt\n", div)
     # print("mat = \n", mat.toarray()[4])
     # exit()
-    res = cp.asnumpy(la.spsolve(mat, cp.asarray(div)))
-    res = res.reshape(GRID_HEIGHT, GRID_WIDTH)
+    knowns = cp.asarray(div)
+    print("KNOWNS", knowns)
+    res = la.spsolve(mat, knowns)
+    print("MAT * RES", cp.asarray(mat @ res))
+    error = cp.linalg.norm(mat @ res - knowns)
+    print("Residual Error:", error)
+
+    res = cp.asnumpy(res).reshape(GRID_HEIGHT, GRID_WIDTH)
     print(np.array(res))
     # print(res[0, 0])
     # print(res[0, 1] / 3)
@@ -48,22 +55,30 @@ def clear_divergence():
     # y_mac[1:-1, :] += res[:-1, :]  # top one
 
     # OLD PART
-    print(np.array(div, dtype=int).reshape(GRID_HEIGHT, GRID_WIDTH))
+    print("OLD DIV\n", np.array(div, dtype=int).reshape(GRID_HEIGHT, GRID_WIDTH))
 
+    x_b = np.zeros(x_mac.shape)
+    y_b = np.zeros(y_mac.shape)
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
-            y_mac[y, x] += res[y - 1, x]
-            y_mac[y, x] -= res[y, x]
+            y_b[y, x] += res[y - 1, x]
+            y_b[y, x] -= res[y, x]
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
-            x_mac[y, x] += res[y, x]
-            x_mac[y, x] -= res[y, x - 1]
+            x_b[y, x] += res[y, x]
+            x_b[y, x] -= res[y, x - 1]
 
-    print("final A div = ", int(divcompute_cell(0, 0)))
-    print("final C div = ", int(divcompute_cell(0, 1)))
-    print("final B div = ", int(divcompute_cell(1, 0)))
-    print(np.array(res, dtype=int))
+    # print("final A div = ", int(divcompute_cell(0, 0)))
+    # print("final C div = ", int(divcompute_cell(0, 1)))
+    # print("final B div = ", int(divcompute_cell(1, 0)))
+    print("Y")
+    print(np.array(y_b, dtype=int))
+    print("X")
+    print(np.array(x_b, dtype=int))
+    x_mac += x_b
+    y_mac += y_b
     div = compute_divergence()
+    # print("y ", y_mac)
     print("new div: \n", np.array(div, dtype=int))
 
     # print("final B div = ", x_mac[0, 1] + y_mac[1, 1] + x_mac[0, 2])
