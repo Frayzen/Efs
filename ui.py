@@ -33,6 +33,7 @@ def draw_grid():
                 color = [255, 0, 0]
             else:
                 color = [clamp(int(density[y, x]), 0, 255)] * 3
+            color = [255] * 3
 
             pygame.draw.rect(
                 screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
@@ -58,7 +59,7 @@ def draw_grid():
 
 
 def draw_vel():
-    ratio = 50 * dt
+    ratio = 10 * dt
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
             pos = np.array([x, y + 0.5])
@@ -73,6 +74,29 @@ def draw_vel():
             pos = np.array([x + 0.5, y])
             v = interpolate_velocity(pos)
             v[1] *= -1
+            pygame.draw.line(
+                screen,
+                (0, 225, 0),
+                pos * CELL_SIZE,
+                (pos + v * ratio) * CELL_SIZE,
+                2,
+            )
+
+
+def draw_vel_no_interp():
+    ratio = dt
+    for x in range(0, GRID_WIDTH):
+        for y in range(GRID_HEIGHT):
+            pos = np.array([x + 0.5, y])
+            v = np.array([0, -y_mac[y, x]])
+            pygame.draw.line(
+                screen, (225, 0, 0), pos * CELL_SIZE, (pos + v * ratio) * CELL_SIZE, 2
+            )
+
+    for x in range(GRID_WIDTH):
+        for y in range(0, GRID_HEIGHT):
+            pos = np.array([x, y + 0.5])
+            v = np.array([x_mac[y, x], 0])
             pygame.draw.line(
                 screen,
                 (0, 225, 0),

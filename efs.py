@@ -16,15 +16,15 @@ dampening = 1
 # Main loop
 running = True
 
-# x_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = -3
-# x_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = 3
-# y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3
-# y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3
+# x_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = -30
+# x_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = 30
+# y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 30
+# y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -30
 # x_mac[1, 1] = -3
 # x_mac[1, 2] = 3
 # y_mac[1, 1] = 3000
 # y_mac[2, 1] = -3000
-y_mac[1, 1] = 8
+# y_mac[1, 1] = 800
 
 
 # density[GRID_HEIGHT // 2, GRID_WIDTH // 4] = 50000
@@ -52,11 +52,11 @@ while running:
     # for i in range(3):
     #     advect()
     clear_divergence()
-    draw_vel()
+    draw_vel_no_interp()
 
     pygame.display.flip()
 
-    update_density()
+    # update_density()
     # time.sleep(dt)
 
     keys = pygame.key.get_pressed()
@@ -65,12 +65,12 @@ while running:
         x_mac[:, :] = 0
         y_mac[:, :] = 0
 
-        x_mac[GRID_HEIGHT // 2, 8] = 3000
-        y_mac[GRID_HEIGHT // 2, 8] = 3000
-        y_mac[GRID_HEIGHT // 2 + 1, 8] = -3000
+        # x_mac[GRID_HEIGHT // 2, 8] = 300
+        # y_mac[GRID_HEIGHT // 2, 8] = 300
+        y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 1000
 
-        density[GRID_HEIGHT // 2, 4] = 50000
-        density[GRID_HEIGHT // 2 + 1, 4] = 50000
+        # density[GRID_HEIGHT // 2, 4] = 300
+        # density[GRID_HEIGHT // 2 + 1, 4] = 300
 
 
 pygame.quit()
