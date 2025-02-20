@@ -50,7 +50,7 @@ while running:
     #     w_grid[GRID_HEIGHT // 2, 0] = max(w_grid[GRID_HEIGHT // 2, 0], 0)
 
     # for i in range(3):
-    #     advect()
+    advect()
     clear_divergence()
     draw_vel_no_interp()
 
