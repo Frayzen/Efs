@@ -1,4 +1,5 @@
 from pygame.math import clamp
+import cupy as cp
 
 from const import *
 
@@ -75,7 +76,7 @@ s_flat = s.ravel()
 
 # IMPLEM
 
-diags.append([s_flat[i] for i in range(n)])
+diags.append([4 for i in range(n)])
 offsets.append(0)
 
 right_diag = np.array([-1 for i in range(n - 1)])
@@ -99,6 +100,6 @@ offsets.append(-GRID_WIDTH)
 
 # print(diags)
 mat = sp.diags(diags, offsets, shape=(n, n))
-print(mat.toarray())
+print("DET = ", cp.linalg.det(mat.toarray()))
 # for i in range(n):
 #     print("mat (", i, ")) = \n", mat.toarray()[i])

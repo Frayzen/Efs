@@ -20,22 +20,33 @@ def compute_divergence():
 
 
 def clear_divergence():
-    div = compute_divergence().ravel()
-    print("cunt\n", div)
+    print("old xmac = \n", x_mac)
+    print("old ymac = \n", y_mac)
+
+    div = compute_divergence()
+    print("old div: \n", np.array(div, dtype=float))
+    div = div.ravel()
     # print("mat = \n", mat.toarray()[4])
     # exit()
     res = cp.asnumpy(la.spsolve(mat, cp.asarray(div)))
+    # ch = res @ cp.asnumpy(mat.toarray())
+    # print("CHECK\n", np.sum(ch))
     res = res.reshape(GRID_HEIGHT, GRID_WIDTH)
-    print(np.array(res))
+    print("RES ", res.ravel())
+    print("RES 2 ", res.ravel() * 2)
+    print("RES 4", res.ravel() * 4)
+    # res = res * 4
+
+    # print(np.array(res))
     # print(res[0, 0])
     # print(res[0, 1] / 3)
     # print(res[1, 0] / 3)
 
-    print("FIRST ROW", div[:GRID_WIDTH])
+    # print("FIRST ROW", div[:GRID_WIDTH])
 
     # res /= s
     # # OLD PART
-    print("EQUAL ", res[0, 1] + res[1, 0], " = ", res[0, 0] * 2)
+    # print("EQUAL ", res[0, 1] + res[1, 0], " = ", res[0, 0] * 2)
     # print("SHOULD ADD ", res[1, 0], " + ", res[0, 1])
     # # print("res A = ", res[0:2, 0:2])
     # print("BEF", x_mac[0, 1])
@@ -48,9 +59,9 @@ def clear_divergence():
     # y_mac[1:-1, :] += res[:-1, :]  # top one
 
     # OLD PART
-    print(np.array(div, dtype=int).reshape(GRID_HEIGHT, GRID_WIDTH))
+    # print(np.array(div, dtype=int).reshape(GRID_HEIGHT, GRID_WIDTH))
 
-    for x in range(GRID_WIDTH):
+    for x in range(1, GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
             y_mac[y, x] += res[y - 1, x]
             y_mac[y, x] -= res[y, x]
@@ -59,12 +70,15 @@ def clear_divergence():
             x_mac[y, x] += res[y, x]
             x_mac[y, x] -= res[y, x - 1]
 
-    print("final A div = ", int(divcompute_cell(0, 0)))
-    print("final C div = ", int(divcompute_cell(0, 1)))
-    print("final B div = ", int(divcompute_cell(1, 0)))
-    print(np.array(res, dtype=int))
+    # print("final A div = ", int(divcompute_cell(0, 0)))
+    # print("final C div = ", int(divcompute_cell(0, 1)))
+    # print("final B div = ", int(divcompute_cell(1, 0)))
+    # print(np.array(res, dtype=int))
     div = compute_divergence()
-    print("new div: \n", np.array(div, dtype=int))
+    print("new div: \n", np.array(div, dtype=float))
+
+    print("new xmac = \n", x_mac)
+    print("new ymac = \n", y_mac)
 
     # print("final B div = ", x_mac[0, 1] + y_mac[1, 1] + x_mac[0, 2])
     # print("final B div = ", x_mac[0, 1] + y_mac[1, 1] + x_mac[0, 2])
