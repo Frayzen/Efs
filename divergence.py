@@ -1,8 +1,7 @@
 from const import *
 from grid import *
 from velocity import *
-import cupyx.scipy.sparse.linalg as la
-import cupy as cp
+import scipy.sparse.linalg as spl
 
 
 def divcompute_cell(x, y):
@@ -28,13 +27,13 @@ def clear_divergence():
     div = div.ravel()
     # print("mat = \n", mat.toarray()[4])
     # exit()
-    res = cp.asnumpy(la.spsolve(mat, cp.asarray(div)))
-    # ch = res @ cp.asnumpy(mat.toarray())
-    # print("CHECK\n", np.sum(ch))
+    res = spl.spsolve(mat, div)
+    ch = res @ mat
+    print("sytem is ")
+    print(mat.toarray())
+    print(div)
+    # print("CHECK\n", ch)
     res = res.reshape(GRID_HEIGHT, GRID_WIDTH)
-    print("RES ", res.ravel())
-    print("RES 2 ", res.ravel() * 2)
-    print("RES 4", res.ravel() * 4)
     # res = res * 4
 
     # print(np.array(res))
@@ -61,14 +60,15 @@ def clear_divergence():
     # OLD PART
     # print(np.array(div, dtype=int).reshape(GRID_HEIGHT, GRID_WIDTH))
 
+    for x in range(GRID_WIDTH):
+        for y in range(1, GRID_HEIGHT):
+            y_mac[y, x] -= res[y - 1, x] * s[y - 1, x]
+            y_mac[y, x] += res[y, x] * s[y, x]
+
     for x in range(1, GRID_WIDTH):
-        for y in range(1, GRID_HEIGHT - 1):
-            y_mac[y, x] += res[y - 1, x]
-            y_mac[y, x] -= res[y, x]
-    for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
-            x_mac[y, x] += res[y, x]
-            x_mac[y, x] -= res[y, x - 1]
+            x_mac[y, x] -= res[y, x] * s[y, x]
+            x_mac[y, x] += res[y, x - 1] * s[y, x - 1]
 
     # print("final A div = ", int(divcompute_cell(0, 0)))
     # print("final C div = ", int(divcompute_cell(0, 1)))
