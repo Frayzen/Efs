@@ -20,8 +20,12 @@ running = True
 # x_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = 3
 # y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3
 # y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3
-x_mac[1, 1] = 2
-# x_mac[1, 2] = 3
+# x_mac[1, 1] = 8
+v = 4
+x_mac[1, 1] = v
+# x_mac[2, 2] = v
+# y_mac[2, 0] = -v
+# y_mac[1, 2] = v
 # y_mac[1, 1] = 3
 # y_mac[2, 1] = -3
 
@@ -30,7 +34,7 @@ x_mac[1, 1] = 2
 # density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
 
 while running:
-    # screen.fill()
+    screen.fill([255] * 3)
     draw_grid()
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     vel = interpolate_velocity(pos)
@@ -48,7 +52,7 @@ while running:
     #     w_grid[GRID_HEIGHT // 2, 0] = max(w_grid[GRID_HEIGHT // 2, 0], 0)
 
     clear_divergence()
-    draw_vel()
+    draw_vel_no_interp()
 
     pygame.display.flip()
 

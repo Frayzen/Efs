@@ -76,31 +76,49 @@ s_flat = s.ravel()
 
 
 # IMPLEM
+sys_width = GRID_WIDTH + 2
+sys_heigth = GRID_HEIGHT + 2
 
-diags.append([s_flat[i] for i in range(n)])
+sys_n = sys_width * sys_heigth
+
+
+def not_bound(i):
+    x = i % sys_width
+    y = i // sys_width
+    if x == 0 or x == sys_width - 1 or y == 0 or y == sys_heigth - 1:
+        return 0
+    return 1
+
+
+def main_diag(i):
+    x = i % sys_width
+    y = i // sys_width
+    if x == 0 or x == sys_width - 1 or y == 0 or y == sys_heigth - 1:
+        return 4
+    return s[y - 1, x - 1]
+
+
+diags.append([-main_diag(i) for i in range(sys_n)])
 offsets.append(0)
 
-right_diag = np.array([-1 for i in range(n - 1)])
-right_diag[GRID_WIDTH - 1 :: GRID_WIDTH] = 0
-diags.append(right_diag)  # right
-
+diags.append([not_bound(i) for i in range(sys_n - 1)])  # right
 offsets.append(1)
 
-left_diag = np.array([1 for i in range(1, n)])
-left_diag[GRID_WIDTH - 1 :: GRID_WIDTH] = 0
-diags.append(left_diag)  # left
+diags.append([not_bound(i) for i in range(1, sys_n)])  # left
 offsets.append(-1)
 
+diags.append([not_bound(i) for i in range(sys_n - sys_width)])  # top
+offsets.append(sys_width)
 
-diags.append([-1 for i in range(n - GRID_WIDTH)])  # top
-offsets.append(GRID_WIDTH)
-
-diags.append([1 for i in range(GRID_WIDTH, n)])  # bot
-offsets.append(-GRID_WIDTH)
+diags.append([not_bound(i) for i in range(sys_width, sys_n)])  # bot
+offsets.append(-sys_width)
 
 
 # print(diags)
-mat = sp.diags(diags, offsets, shape=(n, n))
-print("DET = ", spl.det(mat.toarray()))
+mat = sp.diags(diags, offsets, shape=(sys_n, sys_n))
+det = spl.det(mat.toarray())
+print(mat.toarray())
+print("DET = ", det)
+assert det != 0
 # for i in range(n):
 #     print("mat (", i, ")) = \n", mat.toarray()[i])
