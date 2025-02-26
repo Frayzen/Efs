@@ -98,19 +98,19 @@ def main_diag(i):
     return s[y - 1, x - 1]
 
 
-diags.append([-main_diag(i) for i in range(sys_n)])
+diags.append([-4 for i in range(sys_n)])
 offsets.append(0)
 
 diags.append([not_bound(i) for i in range(sys_n - 1)])  # right
 offsets.append(1)
 
-diags.append([not_bound(i) for i in range(1, sys_n)])  # left
+diags.append([-not_bound(i) for i in range(1, sys_n)])  # left
 offsets.append(-1)
 
 diags.append([not_bound(i) for i in range(sys_n - sys_width)])  # top
 offsets.append(sys_width)
 
-diags.append([not_bound(i) for i in range(sys_width, sys_n)])  # bot
+diags.append([-not_bound(i) for i in range(sys_width, sys_n)])  # bot
 offsets.append(-sys_width)
 
 

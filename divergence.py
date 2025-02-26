@@ -87,4 +87,4 @@ def clear_divergence():
 
     print("new xmac = \n", x_mac)
     print("new ymac = \n", y_mac)
-    input("hey")
+    # input("hey")
