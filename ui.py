@@ -19,7 +19,7 @@ def check_mouse_coords(x, y):
     return pos[0] == x and pos[1] == y
 
 
-def draw_grid():
+def draw_grid(density_grid):
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
             # dv = int(div[y, x] * 100)
@@ -32,8 +32,8 @@ def draw_grid():
             ):
                 color = [255, 0, 0]
             else:
-                color = [clamp(int(density[y, x]), 0, 255)] * 3
-            color = [255] * 3
+                color = [clamp(int(density_grid[y, x]), 0, 255)] * 3
+            # color = [255] * 3
 
             pygame.draw.rect(
                 screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)

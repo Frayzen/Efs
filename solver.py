@@ -59,7 +59,7 @@ div = np.arange(n)
 res = np.linalg.solve(mat.toarray(), div)
 
 
-print(mat)
+# print(mat)
 # print(res)
 # print(div)
 
@@ -69,5 +69,5 @@ print(mat)
 res = res.reshape((GRID_HEIGHT, GRID_WIDTH))
 
 # print(npmat)
-print(res[0, 0] * s[0, 0] + res[1, 0] + res[0, 1])
-print(res[0, 1] * s[0, 1] + res[0, 0] + res[0, 2] + res[1, 1])
+# print(res[0, 0] * s[0, 0] + res[1, 0] + res[0, 1])
+# print(res[0, 1] * s[0, 1] + res[0, 0] + res[0, 2] + res[1, 1])

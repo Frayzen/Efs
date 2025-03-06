@@ -23,22 +23,22 @@ def compute_divergence(define_boundaries=True):
 
 
 def clear_divergence():
-    print("old xmac = \n", x_mac)
-    print("old ymac = \n", y_mac)
+    # print("old xmac = \n", x_mac)
+    # print("old ymac = \n", y_mac)
 
     div = compute_divergence()
-    print("old div: \n", np.array(div, dtype=float))
+    # print("old div: \n", np.array(div, dtype=float))
     div = div.ravel()
     # print("mat = \n", mat.toarray()[4])
     # exit()
-    print("sytem is ")
-    print(mat.toarray())
-    print(div)
+    # print("sytem is ")
+    # print(mat.toarray())
+    # print(div)
     res = spl.spsolve(mat, div)
     ch = mat @ res
-    print("CHECK\n", ch)
+    # print("CHECK\n", ch)
     res = res.reshape(sys_heigth, sys_width)[1:-1, 1:-1]
-    print("res=\n", np.round(res, 2))
+    # print("res=\n", np.round(res, 2))
     # res = res * 4 / s
 
     # print("res * 4 / s=\n", np.round(res, 2))
@@ -83,8 +83,8 @@ def clear_divergence():
     # print("final B div = ", int(divcompute_cell(1, 0)))
     # print(np.array(res, dtype=int))
     div = compute_divergence()
-    print("new div: \n", np.array(div, dtype=float))
+    # print("new div: \n", np.array(div, dtype=float))
 
-    print("new xmac = \n", x_mac)
-    print("new ymac = \n", y_mac)
+    # print("new xmac = \n", x_mac)
+    # print("new ymac = \n", y_mac)
     # input("hey")

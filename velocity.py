@@ -6,13 +6,16 @@ from velocity import *
 
 
 def advect():
+    global x_mac, y_mac
+    pre = np.sum(np.abs(x_mac)) + np.sum(np.abs(y_mac))
+
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
             pos = np.array([x, y + 0.5])
             v = interpolate_velocity(pos)
             nv = interpolate_velocity(pos - v * dt)
             if xmsk[y, x] == 0:
-                x_mac[y, x] *= 0.1
+                x_mac[y, x] *= 0.0
             else:
                 x_mac[y, x] = nv[0]
 
@@ -22,9 +25,13 @@ def advect():
             v = interpolate_velocity(pos)
             nv = interpolate_velocity(pos - v * dt)
             if ymsk[y, x] == 0:
-                y_mac[y, x] *= 0.1
+                y_mac[y, x] *= 0.0
             else:
                 y_mac[y, x] = nv[1]
+    if CONSERVATIE_ADVECTION:
+        aft = np.sum(np.abs(x_mac)) + np.sum(np.abs(y_mac))
+        x_mac *= pre / aft
+        y_mac *= pre / aft
 
 
 def interpolate_velocity(pos, draw=False):

@@ -5,7 +5,7 @@ import scipy.linalg as spl
 from const import *
 
 # Generate initial random colors
-density = np.zeros((GRID_HEIGHT, GRID_WIDTH), dtype=np.float64)
+density_grid = np.zeros((GRID_HEIGHT, GRID_WIDTH), dtype=np.float64)
 
 y_mac = np.array(
     [[0 for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT + 1)],

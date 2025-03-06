@@ -18,31 +18,31 @@ def interpolate_density(pos):
     c = 1 - a
     d = 1 - b
     return (
-        density[Y, X] * c * d
-        + density[Y + 1, X] * b * c
-        + density[Y, X + 1] * a * d
-        + density[Y + 1, X + 1] * a * b
+        density_grid[Y, X] * c * d
+        + density_grid[Y + 1, X] * b * c
+        + density_grid[Y, X + 1] * a * d
+        + density_grid[Y + 1, X + 1] * a * b
     )
 
 
-def update_density():
+def update_density(density_grid):
 
-    global density
-    d_cpy = density.copy()
+    d_cpy = density_grid.copy()
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
-            if (
-                ymsk[y, x] == 0
-                and ymsk[y + 1, x] == 0
-                and xmsk[y, x] == 0
-                and xmsk[y, x + 1] == 0
-            ):
-                continue
+            # if (
+            #     ymsk[y, x] == 0
+            #     and ymsk[y + 1, x] == 0
+            #     and xmsk[y, x] == 0
+            #     and xmsk[y, x + 1] == 0
+            # ):
+            #     continue
             pos = np.array([x + 0.5, y + 0.5])
             v = interpolate_velocity(pos)
             v[1] *= -1
-            d_cpy[y, x] = interpolate_density(pos - v * 30 * dt)
+            d_cpy[y, x] = interpolate_density(pos - v * dt)
     d_sum = np.sum(d_cpy)
     if d_sum and d_sum > 0:
-        density = d_cpy * np.sum(density) / d_sum
-    # density = d_cpy
+        density_grid = d_cpy * np.sum(density_grid) / d_sum
+    density_grid = d_cpy
+    return density_grid
