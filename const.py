@@ -1,9 +1,9 @@
 import numpy as np
 import scipy.sparse as sp
 
-CELL_SIZE = 30  # Pixel size of each cell
-GRID_WIDTH = 20  # Number of cells horizontally
-GRID_HEIGHT = 20  # Number of cells vertically
+CELL_SIZE = 15  # Pixel size of each cell
+GRID_WIDTH = 25  # Number of cells horizontally
+GRID_HEIGHT = 25  # Number of cells vertically
 
 CONSERVATIE_ADVECTION = True
 

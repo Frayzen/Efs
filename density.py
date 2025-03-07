@@ -32,6 +32,8 @@ def interpolate_density(pos, density_grid):
 
 def update_density(density_grid):
 
+    bef = np.sum(np.abs(density_grid))
+
     d_cpy = np.zeros(density_grid.shape)
     for x in range(GRID_WIDTH):
         for y in range(GRID_HEIGHT):
@@ -58,17 +60,18 @@ def update_density(density_grid):
             # pygame.draw.circle(screen, (255, 0, 0), pos * CELL_SIZE, 2)
             pre_pos = pos - v * 0.1
             d_cpy[y, x] = interpolate_density(pre_pos, density_grid)
-            if x == 1 and y == 1:
-                print("pre = ", pre_pos, " DCPY VAL ", d_cpy[y, x])
+            # if x == 1 and y == 1:
+            #     print("pre = ", pre_pos, " DCPY VAL ", d_cpy[y, x])
 
     # pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     # pygame.draw.circle(
     #     screen, (0, 255, 0), pos * CELL_SIZE, interpolate_density(pos, density_grid)
     # )
 
-    # d_sum = np.sum(d_cpy)
-    # if d_sum and d_sum > 0:
-    #     density_grid = d_cpy * np.sum(density_grid) / d_sum
-    # print("DCPY=\n", d_cpy)
+    aft = np.sum(np.abs(d_cpy))
+    if aft != 0:
+        d_cpy *= bef / aft
+    # aft = np.sum(np.abs(d_cpy))
+    # print("SUM=\n", aft)
     return d_cpy
     # return density_grid

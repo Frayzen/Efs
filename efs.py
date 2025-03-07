@@ -21,8 +21,9 @@ running = True
 # y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3
 # y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3
 # x_mac[1, 1] = 8
-v = 100
-x_mac[1, 1] = v
+v = 25
+y_mac[2, 2] = v
+y_mac[-2, -2] = -v
 # x_mac[2, 2] = v
 # y_mac[2, 0] = -v
 # y_mac[1, 2] = v
@@ -58,14 +59,14 @@ while running:
     # y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 1000
     clear_divergence()
     # draw_vel_no_interp()
-    advect()
+    density_grid = update_density(density_grid)
+
     draw_vel_cell()
+    advect()
 
     # print(density_grid)
     # print(density_grid.sum())
     # print("=====")
-    density_grid = update_density(density_grid)
-
     # print(density_grid)
     # print("DEN IS ", density_grid)
     # input("HEY")
@@ -76,7 +77,7 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
         density_grid[:, :] = 0
-        density_grid[1, 1] = 2000
+        density_grid[GRID_HEIGHT // 2, -2] = 20000
         step = True
         # x_mac[:, :] = 0
         # y_mac[:, :] = 0
