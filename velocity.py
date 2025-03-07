@@ -1,30 +1,38 @@
 import pygame
 from pygame.math import clamp
 from const import *
+import ui
 from grid import *
 from velocity import *
 
 
 def advect():
+    global x_mac, y_mac
+    pre = np.sum(np.abs(x_mac)) + np.sum(np.abs(y_mac))
+
     for x in range(1, GRID_WIDTH - 1):
         for y in range(GRID_HEIGHT):
             pos = np.array([x, y + 0.5])
             v = interpolate_velocity(pos)
             nv = interpolate_velocity(pos - v * dt)
-            # if xmsk[y, x] == 0:
-            #     x_mac[y, x] *= 0.1
-            # else:
-            x_mac[y, x] = nv[0]
+            if xmsk[y, x] == 0:
+                x_mac[y, x] *= 0.0
+            else:
+                x_mac[y, x] = nv[0]
 
     for x in range(GRID_WIDTH):
         for y in range(1, GRID_HEIGHT - 1):
             pos = np.array([x + 0.5, y])
             v = interpolate_velocity(pos)
             nv = interpolate_velocity(pos - v * dt)
-            # if ymsk[y, x] == 0:
-            #     y_mac[y, x] *= 0.1
-            # else:
-            y_mac[y, x] = nv[1]
+            if ymsk[y, x] == 0:
+                y_mac[y, x] *= 0.0
+            else:
+                y_mac[y, x] = nv[1]
+    if CONSERVATIE_ADVECTION:
+        aft = np.sum(np.abs(x_mac)) + np.sum(np.abs(y_mac))
+        x_mac *= pre / aft
+        y_mac *= pre / aft
 
 
 def interpolate_velocity(pos, draw=False):
@@ -48,34 +56,46 @@ def interpolate_velocity(pos, draw=False):
     by = abs(py - Y1) - 0.5
     cy = 1 - ay
     dy = 1 - by
-    # if draw:
-    #     # X
-    #     pygame.draw.circle(  # 0 0
-    #         screen, (0, 255, 0), np.array([X1 + 0.5, y]) * CELL_SIZE, dx * cx * 20
-    #     )
-    #     pygame.draw.circle(
-    #         screen, (0, 255, 0), np.array([X1 + 1.5, y]) * CELL_SIZE, ax * dx * 20
-    #     )
-    #     pygame.draw.circle(
-    #         screen, (0, 255, 0), np.array([X1 + 0.5, y + 1]) * CELL_SIZE, bx * cx * 20
-    #     )
-    #     pygame.draw.circle(
-    #         screen, (0, 255, 0), np.array([X1 + 1.5, y + 1]) * CELL_SIZE, ax * bx * 20
-    #     )
+    if draw:
+        # X
+        pygame.draw.circle(  # 0 0
+            ui.screen, (0, 255, 0), np.array([X1 + 0.5, y]) * CELL_SIZE, dx * cx * 20
+        )
+        pygame.draw.circle(
+            ui.screen, (0, 255, 0), np.array([X1 + 1.5, y]) * CELL_SIZE, ax * dx * 20
+        )
+        pygame.draw.circle(
+            ui.screen,
+            (0, 255, 0),
+            np.array([X1 + 0.5, y + 1]) * CELL_SIZE,
+            bx * cx * 20,
+        )
+        pygame.draw.circle(
+            ui.screen,
+            (0, 255, 0),
+            np.array([X1 + 1.5, y + 1]) * CELL_SIZE,
+            ax * bx * 20,
+        )
 
-    #     # Y
-    #     pygame.draw.circle(  # 0 0
-    #         screen, (255, 255, 0), np.array([x, Y1 + 0.5]) * CELL_SIZE, dy * cy * 20
-    #     )
-    #     pygame.draw.circle(
-    #         screen, (255, 255, 0), np.array([x + 1, Y1 + 0.5]) * CELL_SIZE, ay * dy * 20
-    #     )
-    #     pygame.draw.circle(
-    #         screen, (255, 255, 0), np.array([x, Y1 + 1.5]) * CELL_SIZE, by * cy * 20
-    #     )
-    #     pygame.draw.circle(
-    #         screen, (255, 255, 0), np.array([x + 1, Y1 + 1.5]) * CELL_SIZE, ay * by * 20
-    #     )
+        # Y
+        pygame.draw.circle(  # 0 0
+            ui.screen, (255, 255, 0), np.array([x, Y1 + 0.5]) * CELL_SIZE, dy * cy * 20
+        )
+        pygame.draw.circle(
+            ui.screen,
+            (255, 255, 0),
+            np.array([x + 1, Y1 + 0.5]) * CELL_SIZE,
+            ay * dy * 20,
+        )
+        pygame.draw.circle(
+            ui.screen, (255, 255, 0), np.array([x, Y1 + 1.5]) * CELL_SIZE, by * cy * 20
+        )
+        pygame.draw.circle(
+            ui.screen,
+            (255, 255, 0),
+            np.array([x + 1, Y1 + 1.5]) * CELL_SIZE,
+            ay * by * 20,
+        )
 
     return np.array(
         [
