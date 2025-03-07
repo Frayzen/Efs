@@ -21,7 +21,7 @@ running = True
 # y_mac[GRID_HEIGHT // 2, GRID_WIDTH // 2] = 3
 # y_mac[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 2] = -3
 # x_mac[1, 1] = 8
-v = 40
+v = 100
 x_mac[1, 1] = v
 # x_mac[2, 2] = v
 # y_mac[2, 0] = -v
@@ -30,18 +30,19 @@ x_mac[1, 1] = v
 # y_mac[2, 1] = -3
 
 
-density_grid[1, 1] = 50000
+# density_grid[1, 1] = 500
 # density[GRID_HEIGHT // 2 + 1, GRID_WIDTH // 4] = 50000
+step = False
 
 while running:
     screen.fill([255] * 3)
     draw_grid(density_grid)
     pos = np.array(pygame.mouse.get_pos(), dtype=np.float64) / CELL_SIZE
     vel = interpolate_velocity(pos)
-    vel[1] *= -1  # because vector is in cartesion but pygame is upside down
-    pygame.draw.line(
-        screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 2
-    )
+    # vel[1] *= -1  # because vector is in cartesion but pygame is upside down
+    # pygame.draw.line(
+    #     screen, (0, 255, 0), pos * CELL_SIZE, pos * CELL_SIZE + vel * dt * CELL_SIZE, 2
+    # )
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -52,24 +53,29 @@ while running:
     #     w_grid[GRID_HEIGHT // 2, 0] = max(w_grid[GRID_HEIGHT // 2, 0], 0)
 
     clear_divergence()
-    draw_vel_no_interp()
+    # draw_vel_no_interp()
+    advect()
+    draw_vel_cell()
+
+    # print(density_grid)
+    # print(density_grid.sum())
+    # print("=====")
+    density_grid = update_density(density_grid)
+
+    # print(density_grid)
+    # print("DEN IS ", density_grid)
+    # input("HEY")
+    # time.sleep(dt * 10)
 
     pygame.display.flip()
-
-    advect()
-    print(density_grid)
-    print(density_grid.sum())
-    print("=====")
-    density_grid = update_density(density_grid)
-    print(density_grid)
-    print(density_grid.sum())
-    # time.sleep(dt)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
         density_grid[:, :] = 0
-        x_mac[:, :] = 0
-        y_mac[:, :] = 0
+        density_grid[1, 1] = 2000
+        step = True
+        # x_mac[:, :] = 0
+        # y_mac[:, :] = 0
 
         # x_mac[GRID_HEIGHT // 2, 8] = 3000
         # y_mac[GRID_HEIGHT // 2, 8] = 3000
@@ -77,7 +83,8 @@ while running:
 
         # density[GRID_HEIGHT // 2, 4] = 50000
         # density[GRID_HEIGHT // 2 + 1, 4] = 50000
-    # input("test")
+    # if step:
+    #     input("test")
 
 
 pygame.quit()

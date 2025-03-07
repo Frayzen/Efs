@@ -24,15 +24,15 @@ def draw_grid(density_grid):
         for y in range(GRID_HEIGHT):
             # dv = int(div[y, x] * 100)
 
-            if (
-                ymsk[y, x] == 0
-                and ymsk[y + 1, x] == 0
-                and xmsk[y, x] == 0
-                and xmsk[y, x + 1] == 0
-            ):
-                color = [255, 0, 0]
-            else:
-                color = [clamp(int(density_grid[y, x]), 0, 255)] * 3
+            # if (
+            #     ymsk[y, x] == 0
+            #     and ymsk[y + 1, x] == 0
+            #     and xmsk[y, x] == 0
+            #     and xmsk[y, x + 1] == 0
+            # ):
+            #     color = [255, 0, 0]
+            # else:
+            color = [clamp(int(density_grid[y, x]), 0, 255)] * 3
             # color = [255] * 3
 
             pygame.draw.rect(
@@ -60,7 +60,7 @@ def draw_grid(density_grid):
 
 def draw_vel():
     ratio = 0.08
-    for x in range(GRID_WIDTH):
+    for x in range(1, GRID_WIDTH):
         for y in range(GRID_HEIGHT):
             pos = np.array([x, y + 0.5])
             v = interpolate_velocity(pos)
@@ -70,7 +70,7 @@ def draw_vel():
             )
 
     for x in range(GRID_WIDTH):
-        for y in range(GRID_HEIGHT):
+        for y in range(1, GRID_HEIGHT):
             pos = np.array([x + 0.5, y])
             v = interpolate_velocity(pos)
             v[1] *= -1
@@ -94,7 +94,8 @@ def draw_vel_cell():
                 screen,
                 (225, 0, 0),
                 pos * CELL_SIZE,
-                (pos + v / np.linalg.norm(v) * ratio) * CELL_SIZE,
+                # (pos + v / np.linalg.norm(v) * ratio) * CELL_SIZE,
+                (pos + v * ratio) * CELL_SIZE,
                 1,
             )
             pygame.draw.circle(screen, (0, 255, 0), pos * CELL_SIZE, 3)
