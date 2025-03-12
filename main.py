@@ -51,7 +51,8 @@ grid = MacGrid()
 
 # grid.xgrid[2, 3] = -0.7
 # grid.xgrid[0, 3] = -0.7
-grid.xgrid[1, 3] = -0.25
+grid.xgrid[0, 3] = 3
+# grid.xgrid[-1, 3] = 5
 
 
 # grid.xgrid[-1, 1] = 0.7
@@ -61,11 +62,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     draw_cells()
-    grid.draw()
+    grid.draw_centers()
     grid.draw_mouse()
     pygame.display.flip()
-    # time.sleep(DT)
-    input("step")
+    time.sleep(DT)
+    # input("step")
 
     clear_divergence(grid)
     advect(grid)
