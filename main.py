@@ -30,6 +30,8 @@ def draw_cells():
 
 running = True
 grid = MacGrid()
+grid.ygrid[0, 1] = 1
+grid.ygrid[-1, 1] = 1
 grid.xgrid[0, 1] = 1
 grid.xgrid[-1, 1] = 1
 while running:

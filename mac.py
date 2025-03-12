@@ -45,15 +45,15 @@ class MacGrid:
         x, y = get_mouse_coords()
         pos = np.array([x, y])
         val = self.interpolate_velocity(pos)
+        print("val - ", val)
         draw_circle((x, y), GREEN, 2)
-        draw_line(pos, pos + val, GREEN)
+        draw_line(pos, pos + val, WHITE)
 
     def interpolate_velocity(self, pos):
         return np.array(
             [
                 self.interpolate_x(pos),
-                # self.interpolate_y(pos),
-                0,
+                self.interpolate_y(pos),
             ]
         )
 
@@ -62,39 +62,24 @@ class MacGrid:
         v = self.ygrid
         px, py = pos[0], pos[1]
 
-        i = clamp(int(px - 0.5), 0, WIDTH - 1)
-        j = clamp(int(py), 0, HEIGHT - 1)
+        i = px - 0.5
+        j = int(py)
 
-        x = clamp(px - (i + 0.5), 0, WIDTH)
-        y = clamp(j + 1 - py, 0, HEIGHT)
-        print(pos)
-        print(x, y)
-        assert x >= 0 and x <= 1 and y >= 0 and y <= 1
+        if i >= 0:
+            i = int(i)
+        else:
+            i = -1
 
-        w00 = 1 - x
-        w10 = 1 - y
-        w01 = x
-        w11 = y
+        draw_circle((i + 0.5, j), GREEN)
+        draw_circle((i + 1.5, j), GREEN)
+        draw_circle((i + 0.5, j + 1), GREEN)
+        draw_circle((i + 1.5, j + 1), GREEN)
 
-        return (
-            w00 * w10 * v[j, i]
-            + w01 * w10 * v[i + 1, j]
-            + w01 * w11 * v[j + 1, i]
-            + w00 * w11 * v[j + 1, i + 1]
-        )
-
-    def interpolate_x(self, pos):
-
-        u = self.xgrid
-        px, py = pos[0], pos[1]
-
-        i = int(px)
-        j = int(py + 0.5)
-
-        x = px - i
+        x = px - i - 0.5
         y = py - j
-        assert x >= 0 and x <= 1 and y >= 0 and y <= 1
-        print(j, i)
+
+        draw_line((px, py), (px - x, py), BLUE)
+        draw_line((px, py), (px, py - y), BLUE)
 
         w00 = 1 - x
         w10 = 1 - y
@@ -102,14 +87,53 @@ class MacGrid:
         w11 = y
 
         ret = 0
-        if i >= 0:
-            if j > 0:
-                ret += w00 * w10 * u[j, i]
-            if j < HEIGHT - 1:
-                ret += w01 * w11 * u[j + 1, i]
-        if i < WIDTH - 1:
-            if j > 0:
-                ret += w01 * w10 * u[j, i + 1]
-            if j < HEIGHT - 1:
-                ret += w00 * w11 * u[j + 1, i + 1]
+
+        # print(i, i + 1)
+        if i > 0:
+            ret += w00 * w10 * v[j, i]
+            ret += w00 * w11 * v[j + 1, i]
+        elif i < WIDTH - 1:
+            ret += w01 * w10 * v[j, i + 1]
+            ret += w01 * w11 * v[j + 1, i + 1]
+
+        return ret
+
+    def interpolate_x(self, pos):
+
+        u = self.xgrid
+        px, py = pos[0], pos[1]
+
+        i = int(px)
+        j = py - 0.5
+        if j >= 0:
+            j = int(j)
+        else:
+            j = -1
+
+        draw_circle((i, j + 0.5), GREEN)
+        draw_circle((i, j + 1.5), GREEN)
+        draw_circle((i + 1, j + 0.5), GREEN)
+        draw_circle((i + 1, j + 1.5), GREEN)
+
+        x = px - i
+        y = py - j - 0.5
+
+        draw_line((px, py), (px - x, py), BLUE)
+        draw_line((px, py), (px, py - y), BLUE)
+
+        w00 = 1 - x
+        w10 = 1 - y
+        w01 = x
+        w11 = y
+
+        ret = 0
+
+        print(j, j + 1)
+        if j > 0:
+            ret += w00 * w10 * u[j, i]
+            ret += w01 * w10 * u[j, i + 1]
+        elif j < HEIGHT - 1:
+            ret += w01 * w11 * u[j + 1, i]
+            ret += w00 * w11 * u[j + 1, i + 1]
+
         return ret
