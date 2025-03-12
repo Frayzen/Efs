@@ -9,7 +9,17 @@ from divergence import clear_divergence
 from mac import MacGrid
 from ui import screen
 
-from consts import BLACK, CELL_SIZE, HEIGHT, PIX_HEIGHT, PIX_WIDTH, RED, WHITE, WIDTH
+from consts import (
+    BLACK,
+    CELL_SIZE,
+    DT,
+    HEIGHT,
+    PIX_HEIGHT,
+    PIX_WIDTH,
+    RED,
+    WHITE,
+    WIDTH,
+)
 
 
 def get_mouse_coords():
@@ -35,12 +45,12 @@ grid = MacGrid()
 # grid.ygrid[-1, 2] = -0.5
 # grid.ygrid[1, 1] = -0.5
 
-grid.ygrid[3, 2] = -0.7
-grid.ygrid[3, 0] = -0.7
-grid.ygrid[3, 1] = -0.25
+# grid.ygrid[3, 2] = -0.7
+# grid.ygrid[3, 0] = -0.7
+# grid.ygrid[3, 1] = -0.25
 
-grid.xgrid[2, 3] = -0.7
-grid.xgrid[0, 3] = -0.7
+# grid.xgrid[2, 3] = -0.7
+# grid.xgrid[0, 3] = -0.7
 grid.xgrid[1, 3] = -0.25
 
 
@@ -54,6 +64,8 @@ while running:
     grid.draw()
     grid.draw_mouse()
     pygame.display.flip()
+    # time.sleep(DT)
+    input("step")
 
-    # clear_divergence(grid)
-    # advect(grid)
+    clear_divergence(grid)
+    advect(grid)

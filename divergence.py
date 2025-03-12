@@ -23,4 +23,4 @@ def clear_divergence(mac: MacGrid):
                 u[j, i + 1] -= d * s[sj, si + 1] / curs
                 v[j, i] += d * s[sj - 1, si] / curs
                 v[j + 1, i] -= d * s[sj + 1, si] / curs
-    # print(div)
+    print(div)
