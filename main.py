@@ -30,10 +30,16 @@ def draw_cells():
 
 running = True
 grid = MacGrid()
-grid.ygrid[0, 1] = 1
-grid.ygrid[-1, 1] = 1
-grid.xgrid[0, 1] = 1
-grid.xgrid[-1, 1] = 1
+# grid.ygrid[0, 1] = -0.75
+# grid.ygrid[-1, 1] = -0.25
+# grid.ygrid[-1, 2] = -0.5
+# grid.ygrid[1, 1] = -0.5
+
+grid.ygrid[3, 2] = -0.7
+grid.ygrid[3, 0] = -0.7
+grid.ygrid[3, 1] = -0.25
+
+# grid.xgrid[-1, 1] = 0.7
 while running:
     screen.fill(BLACK)
     for event in pygame.event.get():
@@ -44,5 +50,5 @@ while running:
     grid.draw_mouse()
     pygame.display.flip()
 
-    clear_divergence(grid)
+    # clear_divergence(grid)
     # advect(grid)

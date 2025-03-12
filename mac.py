@@ -45,14 +45,16 @@ class MacGrid:
         x, y = get_mouse_coords()
         pos = np.array([x, y])
         val = self.interpolate_velocity(pos)
-        print("val - ", val)
+        # print("val - ", val)
         draw_circle((x, y), GREEN, 2)
         draw_line(pos, pos + val, WHITE)
 
     def interpolate_velocity(self, pos):
+
         return np.array(
             [
-                self.interpolate_x(pos),
+                # self.interpolate_x(pos),
+                0,
                 self.interpolate_y(pos),
             ]
         )
@@ -71,9 +73,9 @@ class MacGrid:
             i = -1
 
         draw_circle((i + 0.5, j), GREEN)
-        draw_circle((i + 1.5, j), GREEN)
-        draw_circle((i + 0.5, j + 1), GREEN)
-        draw_circle((i + 1.5, j + 1), GREEN)
+        draw_circle((i + 1.5, j), RED)
+        draw_circle((i + 0.5, j + 1), WHITE)
+        draw_circle((i + 1.5, j + 1), BLUE)
 
         x = px - i - 0.5
         y = py - j
@@ -87,15 +89,21 @@ class MacGrid:
         w11 = y
 
         ret = 0
-
-        # print(i, i + 1)
-        if i > 0:
-            ret += w00 * w10 * v[j, i]
-            ret += w00 * w11 * v[j + 1, i]
-        elif i < WIDTH - 1:
-            ret += w01 * w10 * v[j, i + 1]
-            ret += w01 * w11 * v[j + 1, i + 1]
-
+        print("i = ", i, " j = ", j)
+        if i >= 0:
+            ret += (1 - x) * (1 - y) * v[j, i]
+            ret += (1 - x) * y * v[j + 1, i]
+        if i < 2:
+            ret += x * (1 - y) * v[j, i + 1]
+            ret += x * y * v[j + 1, i + 1]
+        # if i > 0:
+        #     i = 0
+        # elif i < WIDTH - 1:
+        #     i = WIDTH - 2
+        # ret += w01 * w10 * v[j, i + 1]
+        # ret += w01 * w11 * v[j + 1, i + 1]
+        # ret += w00 * w10 * v[j, i]
+        # ret += w00 * w11 * v[j + 1, i]
         return ret
 
     def interpolate_x(self, pos):
@@ -128,7 +136,6 @@ class MacGrid:
 
         ret = 0
 
-        print(j, j + 1)
         if j > 0:
             ret += w00 * w10 * u[j, i]
             ret += w01 * w10 * u[j, i + 1]
