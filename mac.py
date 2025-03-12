@@ -49,36 +49,67 @@ class MacGrid:
         draw_line(pos, pos + val, GREEN)
 
     def interpolate_velocity(self, pos):
-
-        px, py = pos[0], pos[1]
-
-        X1 = clamp(int(px - 0.5), 0, WIDTH - 2)
-        Y1 = clamp(int(py - 0.5), 0, HEIGHT - 2)
-        X2 = X1 + 1
-        Y2 = Y1 + 1
-
-        x = clamp(int(px), 0, WIDTH - 2)
-        y = clamp(int(py), 0, HEIGHT - 2)
-        ax = abs(px - X1) - 0.5
-        bx = py - int(py)
-        cx = 1 - ax
-        dx = 1 - bx
-
-        ay = px - int(px)
-        by = abs(py - Y1) - 0.5
-        cy = 1 - ay
-        dy = 1 - by
         return np.array(
             [
-                # X
-                self.xgrid[Y1, x] * dy * cy  # top left
-                + self.xgrid[Y1, x + 1] * ay * dy  # top right
-                + self.xgrid[Y2, x] * by * cy  # bottom left
-                + self.xgrid[Y2, x + 1] * ay * by,  # bottom right
-                # Y
-                self.ygrid[y, X1] * dx * cx
-                + self.ygrid[y, X2] * ax * dx
-                + self.ygrid[y + 1, X1] * bx * cx
-                + self.ygrid[y + 1, X2] * ax * bx,
+                self.interpolate_x(pos),
+                # self.interpolate_y(pos),
+                0,
             ]
         )
+
+    def interpolate_y(self, pos):
+
+        v = self.ygrid
+        px, py = pos[0], pos[1]
+
+        i = clamp(int(px - 0.5), 0, WIDTH - 1)
+        j = clamp(int(py), 0, HEIGHT - 1)
+
+        x = clamp(px - (i + 0.5), 0, WIDTH)
+        y = clamp(j + 1 - py, 0, HEIGHT)
+        print(pos)
+        print(x, y)
+        assert x >= 0 and x <= 1 and y >= 0 and y <= 1
+
+        w00 = 1 - x
+        w10 = 1 - y
+        w01 = x
+        w11 = y
+
+        return (
+            w00 * w10 * v[j, i]
+            + w01 * w10 * v[i + 1, j]
+            + w01 * w11 * v[j + 1, i]
+            + w00 * w11 * v[j + 1, i + 1]
+        )
+
+    def interpolate_x(self, pos):
+
+        u = self.xgrid
+        px, py = pos[0], pos[1]
+
+        i = int(px)
+        j = int(py + 0.5)
+
+        x = px - i
+        y = py - j
+        assert x >= 0 and x <= 1 and y >= 0 and y <= 1
+        print(j, i)
+
+        w00 = 1 - x
+        w10 = 1 - y
+        w01 = x
+        w11 = y
+
+        ret = 0
+        if i >= 0:
+            if j > 0:
+                ret += w00 * w10 * u[j, i]
+            if j < HEIGHT - 1:
+                ret += w01 * w11 * u[j + 1, i]
+        if i < WIDTH - 1:
+            if j > 0:
+                ret += w01 * w10 * u[j, i + 1]
+            if j < HEIGHT - 1:
+                ret += w00 * w11 * u[j + 1, i + 1]
+        return ret

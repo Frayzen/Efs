@@ -4,6 +4,7 @@ import pygame
 import time
 import numpy as np
 from pygame.math import clamp
+from advection import advect
 from divergence import clear_divergence
 from mac import MacGrid
 from ui import screen
@@ -42,3 +43,4 @@ while running:
     pygame.display.flip()
 
     clear_divergence(grid)
+    # advect(grid)
