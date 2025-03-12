@@ -53,8 +53,8 @@ class MacGrid:
 
         return np.array(
             [
-                # self.interpolate_x(pos),
-                0,
+                self.interpolate_x(pos),
+                # 0,
                 self.interpolate_y(pos),
             ]
         )
@@ -72,38 +72,24 @@ class MacGrid:
         else:
             i = -1
 
-        draw_circle((i + 0.5, j), GREEN)
-        draw_circle((i + 1.5, j), RED)
-        draw_circle((i + 0.5, j + 1), WHITE)
-        draw_circle((i + 1.5, j + 1), BLUE)
+        # draw_circle((i + 0.5, j), GREEN)
+        # draw_circle((i + 1.5, j), RED)
+        # draw_circle((i + 0.5, j + 1), WHITE)
+        # draw_circle((i + 1.5, j + 1), BLUE)
 
         x = px - i - 0.5
         y = py - j
 
-        draw_line((px, py), (px - x, py), BLUE)
-        draw_line((px, py), (px, py - y), BLUE)
-
-        w00 = 1 - x
-        w10 = 1 - y
-        w01 = x
-        w11 = y
+        # draw_line((px, py), (px - x, py), BLUE)
+        # draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
-        print("i = ", i, " j = ", j)
         if i >= 0:
             ret += (1 - x) * (1 - y) * v[j, i]
             ret += (1 - x) * y * v[j + 1, i]
         if i < 2:
             ret += x * (1 - y) * v[j, i + 1]
             ret += x * y * v[j + 1, i + 1]
-        # if i > 0:
-        #     i = 0
-        # elif i < WIDTH - 1:
-        #     i = WIDTH - 2
-        # ret += w01 * w10 * v[j, i + 1]
-        # ret += w01 * w11 * v[j + 1, i + 1]
-        # ret += w00 * w10 * v[j, i]
-        # ret += w00 * w11 * v[j + 1, i]
         return ret
 
     def interpolate_x(self, pos):
@@ -113,34 +99,29 @@ class MacGrid:
 
         i = int(px)
         j = py - 0.5
+
         if j >= 0:
             j = int(j)
         else:
             j = -1
 
-        draw_circle((i, j + 0.5), GREEN)
-        draw_circle((i, j + 1.5), GREEN)
-        draw_circle((i + 1, j + 0.5), GREEN)
-        draw_circle((i + 1, j + 1.5), GREEN)
+        # draw_circle((i, j + 0.5), GREEN)
+        # draw_circle((i + 1, j + 0.5), RED)
+        # draw_circle((i, j + 1.5), WHITE)
+        # draw_circle((i + 1, j + 1.5), BLUE)
 
         x = px - i
         y = py - j - 0.5
 
-        draw_line((px, py), (px - x, py), BLUE)
-        draw_line((px, py), (px, py - y), BLUE)
-
-        w00 = 1 - x
-        w10 = 1 - y
-        w01 = x
-        w11 = y
+        # draw_line((px, py), (px - x, py), BLUE)
+        # draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
-
-        if j > 0:
-            ret += w00 * w10 * u[j, i]
-            ret += w01 * w10 * u[j, i + 1]
-        elif j < HEIGHT - 1:
-            ret += w01 * w11 * u[j + 1, i]
-            ret += w00 * w11 * u[j + 1, i + 1]
+        if j >= 0:
+            ret += (1 - x) * (1 - y) * u[j, i]
+            ret += x * (1 - y) * u[j, i + 1]
+        if j < HEIGHT - 1:
+            ret += (1 - x) * y * u[j + 1, i]
+            ret += x * y * u[j + 1, i + 1]
 
         return ret

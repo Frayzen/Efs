@@ -39,6 +39,11 @@ grid.ygrid[3, 2] = -0.7
 grid.ygrid[3, 0] = -0.7
 grid.ygrid[3, 1] = -0.25
 
+grid.xgrid[2, 3] = -0.7
+grid.xgrid[0, 3] = -0.7
+grid.xgrid[1, 3] = -0.25
+
+
 # grid.xgrid[-1, 1] = 0.7
 while running:
     screen.fill(BLACK)
