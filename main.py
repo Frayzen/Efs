@@ -4,9 +4,11 @@ import pygame
 import time
 import numpy as np
 from pygame.math import clamp
+from divergence import clear_divergence
+from mac import MacGrid
 from ui import screen
 
-from consts import CELL_SIZE, HEIGHT, PIX_HEIGHT, PIX_WIDTH, RED, WHITE, WIDTH
+from consts import BLACK, CELL_SIZE, HEIGHT, PIX_HEIGHT, PIX_WIDTH, RED, WHITE, WIDTH
 
 
 def get_mouse_coords():
@@ -25,6 +27,18 @@ def draw_cells():
             pygame.draw.rect(screen, WHITE, rect, 1)
 
 
-while True:
+running = True
+grid = MacGrid()
+grid.xgrid[0, 1] = 1
+grid.xgrid[-1, 1] = 1
+while running:
+    screen.fill(BLACK)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
     draw_cells()
+    grid.draw()
+    grid.draw_mouse()
     pygame.display.flip()
+
+    clear_divergence(grid)

@@ -2,13 +2,23 @@ import pygame
 from pygame.math import clamp
 from consts import *
 import numpy as np
-from ui import screen
+from ui import draw_circle, draw_line, screen
+
+
+def get_mouse_coords_int():
+    return np.array(pygame.mouse.get_pos()) // CELL_SIZE
+
+
+def get_mouse_coords():
+    return np.array(pygame.mouse.get_pos()) / CELL_SIZE
 
 
 class MacGrid:
     def __init__(self) -> None:
-        self.xgrid = [HEIGHT, WIDTH + 1]
-        self.ygrid = [HEIGHT + 1, WIDTH]
+        self.xgrid = np.zeros((HEIGHT, WIDTH + 1))
+        self.ygrid = np.zeros((HEIGHT + 1, WIDTH))
+        self.s = np.ones((HEIGHT, WIDTH))
+        self.s = np.pad(self.s, pad_width=1, mode="constant", constant_values=0)
 
     def draw(self):
         # X
@@ -16,21 +26,27 @@ class MacGrid:
             for y in range(HEIGHT):
                 pos = np.array([x, y + 0.5])
                 val = np.array([self.xgrid[y, x], 0])
-                pygame.draw.line(screen, RED, pos, pos + val)
+                draw_line(pos, pos + val, RED)
         # Y
         for x in range(WIDTH):
             for y in range(HEIGHT + 1):
                 pos = np.array([x + 0.5, y])
                 val = np.array([0, self.ygrid[y, x]])
-                pygame.draw.line(screen, RED, pos, pos + val)
+                draw_line(pos, pos + val, RED)
 
     def draw_centers(self):
-        # X
         for x in range(WIDTH):
             for y in range(HEIGHT):
                 pos = np.array([x + 0.5, y + 0.5])
-                val = np.array([self.xgrid[y, x], 0])
-                pygame.draw.line(screen, RED, pos, pos + val)
+                val = self.interpolate_velocity(pos)
+                draw_line(pos, pos + val, RED)
+
+    def draw_mouse(self):
+        x, y = get_mouse_coords()
+        pos = np.array([x, y])
+        val = self.interpolate_velocity(pos)
+        draw_circle((x, y), GREEN, 2)
+        draw_line(pos, pos + val, GREEN)
 
     def interpolate_velocity(self, pos):
 
@@ -56,14 +72,13 @@ class MacGrid:
             [
                 # X
                 self.xgrid[Y1, x] * dy * cy  # top left
-                + self.xgrid[Y1, x + self.1] * ay * dy  # top right
+                + self.xgrid[Y1, x + 1] * ay * dy  # top right
                 + self.xgrid[Y2, x] * by * cy  # bottom left
-                + self.xgrid[Y2, x + self.1] * ay * by,  # bottom right
+                + self.xgrid[Y2, x + 1] * ay * by,  # bottom right
                 # Y
-                ,
-                self.ygrid[y, X1] * dx * cx,
+                self.ygrid[y, X1] * dx * cx
                 + self.ygrid[y, X2] * ax * dx
-                + self.ygrid[y + self.1, X1] * bx * cx
-                + self.ygrid[y + self.1, X2] * ax * bx,
+                + self.ygrid[y + 1, X1] * bx * cx
+                + self.ygrid[y + 1, X2] * ax * bx,
             ]
         )
