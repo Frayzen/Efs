@@ -61,10 +61,11 @@ density = ScalarGrid()
 # grid.xgrid[-1, 3] = 5
 
 
-grid.xgrid[1, 1] = 0.7
-grid.ygrid[-2, 1] = -0.7
-grid.ygrid[1, -2] = 0.7
-grid.xgrid[-2, -2] = -0.7
+v = 20
+grid.xgrid[1, 1] = v
+grid.ygrid[-2, 1] = -v
+grid.ygrid[1, -2] = v
+grid.xgrid[-2, -2] = -v
 
 density.field[1, 1] = 80
 # density.field[-2, 1] = 80
