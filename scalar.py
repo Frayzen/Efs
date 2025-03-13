@@ -27,7 +27,6 @@ class ScalarGrid:
                 )
                 draw_circle((50, 50), RED, 20)
                 color = [clamp(self.field[y, x] * 20, 0, 225)] * 3
-                # print(color)
                 pygame.draw.rect(
                     screen,
                     color,
@@ -39,7 +38,7 @@ class ScalarGrid:
         x, y = get_mouse_coords()
         pos = np.array([x, y])
         val = self.interpolate_scalar(pos)
-        draw_circle((x, y), GREEN, val * 20)
+        draw_circle((x, y), GREEN, val)
 
     def interpolate_scalar(self, pos):
 
@@ -58,8 +57,8 @@ class ScalarGrid:
         x = px - ic
         y = py - jc
 
-        draw_line((px, py), (px - x, py), BLUE)
-        draw_line((px, py), (px, py - y), BLUE)
+        # draw_line((px, py), (px - x, py), BLUE)
+        # draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
 

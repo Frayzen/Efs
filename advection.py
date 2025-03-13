@@ -1,9 +1,10 @@
 from pygame.math import clamp
-from consts import CONSERVATIVE_ADVECTION, CONSERVATIVE_SCALAR, DT, HEIGHT, WIDTH
+from consts import CONSERVATIVE_ADVECTION, CONSERVATIVE_SCALAR, DT, GREEN, HEIGHT, WIDTH
 from mac import MacGrid
 import numpy as np
 
 from scalar import ScalarGrid
+from ui import draw_line
 
 
 def advect_velocities(grid: MacGrid):
@@ -37,19 +38,29 @@ def advect_velocities(grid: MacGrid):
 
 def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
     pre = np.sum(np.abs(scalar_grid.field))
+    print("pre = ", pre)
 
     for i in range(WIDTH):
         for j in range(HEIGHT):
             pos = np.array([i + 0.5, j + 0.5])
-            print("pos= ", pos)
-            value = velocity_grid.interpolate_velocity(pos)
-            new_pos = pos - value * DT
-            new_pos[0] = clamp(new_pos[0], 0, WIDTH - 1)
-            new_pos[1] = clamp(new_pos[1], 0, HEIGHT - 1)
+            vel = velocity_grid.interpolate_velocity(pos)
+
+            new_pos = pos - vel * DT * 5
+            new_pos[0] = clamp(new_pos[0], 0, WIDTH - 0.5)
+            new_pos[1] = clamp(new_pos[1], 0, HEIGHT - 0.5)
             nv = scalar_grid.interpolate_scalar(new_pos)
+            if i == 1 and j == 3:
+                print("vel = ", vel)
+                print("pos = ", pos)
+                print("new_pos = ", new_pos)
+                print("nv = ", nv)
+            if nv < 0:
+                print("i,j", i, j)
+
             scalar_grid.field[j, i] = nv
 
-    if CONSERVATIVE_SCALAR:
-        aft = np.sum(np.abs(scalar_grid.field))
+    aft = np.sum(np.abs(scalar_grid.field))
+    print("aft = ", aft)
+    if CONSERVATIVE_SCALAR and aft:
 
         scalar_grid.field *= pre / aft

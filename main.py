@@ -45,7 +45,7 @@ density = ScalarGrid()
 # density.field[1, 2] = 7
 # density.field[0, 2] = 3
 # density.field[1, 0] = 3
-density.field[2, 1] = 50
+density.field[2, 1] = 20
 # grid.ygrid[0, 1] = -0.75
 # grid.ygrid[-1, 1] = -0.25
 # grid.ygrid[-1, 2] = -0.5
@@ -62,24 +62,27 @@ density.field[2, 1] = 50
 # grid.xgrid[-1, 3] = 5
 
 
-grid.xgrid[2, 1] = 3
+# grid.xgrid[2, 1] = 0.7
 while running:
-    # screen.fill(BLACK)
     screen.fill(RED)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
     # draw_cells()
-    # grid.draw_mouse()
+    grid.draw_mouse()
     density.draw()
+
+    print(np.array(density.field, dtype=int))
+    print("sum dens = ", np.sum(density.field))
     grid.draw_centers()
+    density.draw_mouse()
 
     # density.field[2, 1] = 50
 
-    print(density.field)
     pygame.display.flip()
-    time.sleep(DT)
-    advect_scalar(density, grid)
 
-    clear_divergence(grid)
-    advect_velocities(grid)
+    # clear_divergence(grid)
+    # advect_velocities(grid)
+    advect_scalar(density, grid)
+    time.sleep(DT)
+    input("test")
