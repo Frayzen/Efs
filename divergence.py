@@ -9,7 +9,7 @@ def clear_divergence(mac: MacGrid):
     v = mac.ygrid
 
     s = mac.s
-    div = np.zeros((HEIGHT, WIDTH))
+    # div = np.zeros((HEIGHT, WIDTH))
     for _ in range(n):
         for i in range(0, WIDTH):
             for j in range(0, HEIGHT):

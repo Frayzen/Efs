@@ -16,7 +16,7 @@ class ScalarGrid:
         self.field = np.zeros((HEIGHT, WIDTH))
 
     def draw(self):
-        scale = 255 / np.max(self.field)
+        # scale = 255 / np.max(self.field)
         # print("max = ", np.max(self.field))
 
         for x in range(WIDTH):
@@ -28,7 +28,7 @@ class ScalarGrid:
                     CELL_SIZE - 1,
                 )
                 draw_circle((50, 50), RED, 20)
-                color = [clamp(self.field[y, x] * scale, 0, 255) or 0] * 3
+                color = [clamp(self.field[y, x], 0, 255) or 0] * 3
                 # print(color)
                 pygame.draw.rect(
                     screen,

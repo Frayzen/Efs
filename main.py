@@ -6,7 +6,7 @@ import numpy as np
 from pygame.math import clamp
 from advection import advect_scalar, advect_velocities
 from divergence import clear_divergence
-from mac import MacGrid
+from mac import MacGrid, get_mouse_coords_int
 from scalar import ScalarGrid
 from ui import screen
 
@@ -31,8 +31,8 @@ def draw_cells():
     for i in range(HEIGHT):
         for j in range(WIDTH):
             rect = (
-                i * CELL_SIZE,
                 j * CELL_SIZE,
+                i * CELL_SIZE,
                 CELL_SIZE,
                 CELL_SIZE,
             )
@@ -61,36 +61,40 @@ density = ScalarGrid()
 # grid.xgrid[-1, 3] = 5
 
 
-v = 20
-grid.xgrid[1, 1] = v
-grid.ygrid[-2, 1] = -v
-grid.ygrid[1, -2] = v
-grid.xgrid[-2, -2] = -v
+v = 1
+# grid.xgrid[1, 1] = v
+# grid.ygrid[-2, 1] = -v
+# grid.ygrid[1, -2] = v
+# grid.xgrid[-2, -2] = -v
 
-density.field[1, 1] = 80
+# density.field[1, 1] = 80
 # density.field[-2, 1] = 80
 # density.field[1, -2] = 80
-density.field[-2, -2] = 80
+# density.field[-2, -2] = 80
 
 
 prev = False
 cur = 0
 while running:
-    screen.fill(RED)
+    grid.xgrid[:, 0] = v
+    grid.xgrid[:, -1] = v
+    density.field[:, -1] = 0
+    screen.fill(BLACK)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     draw_cells()
-    grid.draw_mouse()
+    grid.draw_s()
+    # grid.draw_mouse()
     density.draw()
 
     # print(np.round(density.field, 2))
-    grid.draw_centers()
+    grid.draw()
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
     clear_divergence(grid)
-    advect_velocities(grid)
+    # advect_velocities(grid)
     # if keys[pygame.K_SPACE] and not prev:
     #     if cur == 0:
     #         print("DIV")
@@ -100,8 +104,18 @@ while running:
     #         cur = 0
     advect_scalar(density, grid)
     prev = keys[pygame.K_SPACE]
+    if keys[pygame.K_SPACE]:
+        density.field[HEIGHT // 2, 0] = 255
+    if pygame.mouse.get_pressed()[0]:
+        x, y = get_mouse_coords_int()
+        print(y, x)
+        grid.s[y, x] = 0
+        grid.xgrid[y, x] = 0
+        grid.xgrid[y, x + 1] = 0
+        grid.ygrid[y, x] = 0
+        grid.ygrid[y + 1, x] = 0
 
     # density.field[2, 1] = 50
 
     pygame.display.flip()
-    time.sleep(DT)
+    # time.sleep(DT)

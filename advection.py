@@ -47,10 +47,12 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
 
     for i in range(WIDTH):
         for j in range(HEIGHT):
+            if velocity_grid.s[j + 1, i + 1] == 0:
+                continue
             pos = np.array([i + 0.5, j + 0.5])
             vel = velocity_grid.interpolate_velocity(pos)
 
-            new_pos = pos - vel * DT * 5
+            new_pos = pos - vel * DT * 20
             new_pos[0] = clamp(new_pos[0], 0, WIDTH)
             new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
             nv = scalar_grid.interpolate_scalar(new_pos)
