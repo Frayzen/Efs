@@ -4,9 +4,10 @@ import pygame
 import time
 import numpy as np
 from pygame.math import clamp
-from advection import advect
+from advection import advect_scalar, advect_velocities
 from divergence import clear_divergence
 from mac import MacGrid
+from scalar import ScalarGrid
 from ui import screen
 
 from consts import (
@@ -40,6 +41,11 @@ def draw_cells():
 
 running = True
 grid = MacGrid()
+density = ScalarGrid()
+# density.field[1, 2] = 7
+# density.field[0, 2] = 3
+# density.field[1, 0] = 3
+density.field[2, 1] = 200
 # grid.ygrid[0, 1] = -0.75
 # grid.ygrid[-1, 1] = -0.25
 # grid.ygrid[-1, 2] = -0.5
@@ -51,22 +57,29 @@ grid = MacGrid()
 
 # grid.xgrid[2, 3] = -0.7
 # grid.xgrid[0, 3] = -0.7
-grid.xgrid[0, 3] = 3
+# grid.xgrid[0, 2] = 3
+# grid.xgrid[0, 1] = -3
 # grid.xgrid[-1, 3] = 5
 
 
-# grid.xgrid[-1, 1] = 0.7
+grid.xgrid[2, 1] = 3
 while running:
-    screen.fill(BLACK)
+    # screen.fill(BLACK)
+    screen.fill(RED)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    draw_cells()
+    # draw_cells()
+    # grid.draw_mouse()
+    density.draw()
     grid.draw_centers()
-    grid.draw_mouse()
+
+    # density.field[2, 1] = 50
+
+    print(density.field)
     pygame.display.flip()
     time.sleep(DT)
-    # input("step")
+    advect_scalar(density, grid)
 
     clear_divergence(grid)
-    advect(grid)
+    advect_velocities(grid)

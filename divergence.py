@@ -4,7 +4,7 @@ from mac import MacGrid
 
 
 def clear_divergence(mac: MacGrid):
-    n = 1
+    n = 10
     u = mac.xgrid
     v = mac.ygrid
 
