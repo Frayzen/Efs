@@ -86,7 +86,7 @@ class MacGrid:
         # draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
-        if i >= 0:
+        if i >= 0 and i < WIDTH:
             ret += (1 - x) * (1 - y) * v[j, i]
             ret += (1 - x) * y * v[j + 1, i]
         if i < HEIGHT - 1:
@@ -119,7 +119,7 @@ class MacGrid:
         # draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
-        if j >= 0:
+        if j >= 0 and j < HEIGHT:
             ret += (1 - x) * (1 - y) * u[j, i]
             ret += x * (1 - y) * u[j, i + 1]
         if j < HEIGHT - 1:

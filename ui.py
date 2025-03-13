@@ -10,10 +10,10 @@ screen = pygame.display.set_mode((PIX_WIDTH, PIX_HEIGHT))
 pygame.display.set_caption("Dynamic Grid Colors")
 
 
-def draw_line(start, dest, color=RED):
+def draw_line(start, dest, color=RED, width=2):
     start = np.array(start)
     dest = np.array(dest)
-    pygame.draw.line(screen, color, start * CELL_SIZE, dest * CELL_SIZE)
+    pygame.draw.line(screen, color, start * CELL_SIZE, dest * CELL_SIZE, width)
 
 
 def draw_circle(center, color=RED, radius=5):

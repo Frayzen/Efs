@@ -48,13 +48,13 @@ class ScalarGrid:
         v = self.field
         px, py = pos[0], pos[1]
 
-        i = clamp(px - 0.5, -1, WIDTH)
+        i = clamp(px - 0.5, -1, WIDTH - 1)
         if i < 0:
             i = -1
         else:
             i = int(i)
 
-        j = clamp(py - 0.5, -1, HEIGHT)
+        j = clamp(py - 0.5, -1, HEIGHT - 1)
         if j < 0:
             j = -1
         else:
@@ -62,23 +62,24 @@ class ScalarGrid:
 
         ic = i + 0.5
         jc = j + 0.5
-        draw_circle((ic, jc), GREEN)
-        draw_circle((ic + 1, jc), RED)
-        draw_circle((ic, jc + 1), WHITE)
-        draw_circle((ic + 1, jc + 1), BLUE)
+        # draw_circle((ic, jc), GREEN)
+        # draw_circle((ic + 1, jc), RED)
+        # draw_circle((ic, jc + 1), WHITE)
+        # draw_circle((ic + 1, jc + 1), BLUE)
 
         x = px - ic
         y = py - jc
 
-        draw_line((px, py), (px - x, py), BLUE)
-        draw_line((px, py), (px, py - y), BLUE)
+        # draw_line((px, py), (px - x, py), BLUE)
+        # draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
-        if i < WIDTH - 1:
+        if i < WIDTH - 1 and j >= 0:
             ret += x * (1 - y) * v[j, i + 1]
         if i < WIDTH - 1 and j < HEIGHT - 1:
             ret += x * y * v[j + 1, i + 1]
-        if j < HEIGHT - 1:
+        if j < HEIGHT - 1 and i >= 0:
             ret += (1 - x) * y * v[j + 1, i]
-        ret += (1 - x) * (1 - y) * v[j, i]
+        if j >= 0 and i >= 0:
+            ret += (1 - x) * (1 - y) * v[j, i]
         return ret

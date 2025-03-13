@@ -61,37 +61,46 @@ density = ScalarGrid()
 # grid.xgrid[-1, 3] = 5
 
 
-grid.xgrid[0, 0] = 0.7
-grid.ygrid[-1, 0] = -0.7
-grid.ygrid[0, -1] = 0.7
-grid.xgrid[-1, -1] = -0.7
+grid.xgrid[1, 1] = 0.7
+grid.ygrid[-2, 1] = -0.7
+grid.ygrid[1, -2] = 0.7
+grid.xgrid[-2, -2] = -0.7
 
-density.field[0, 0] = 80
-density.field[-1, 0] = 80
-density.field[0, -1] = 80
-density.field[-1, -1] = 80
+density.field[1, 1] = 80
+# density.field[-2, 1] = 80
+# density.field[1, -2] = 80
+density.field[-2, -2] = 80
 
 
+prev = False
+cur = 0
 while running:
     screen.fill(RED)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
     draw_cells()
     grid.draw_mouse()
-    # density.draw()
+    density.draw()
 
     # print(np.round(density.field, 2))
     grid.draw_centers()
     # density.draw_mouse()
-    # input("test")
+    keys = pygame.key.get_pressed()
+    clear_divergence(grid)
+    advect_velocities(grid)
+    # if keys[pygame.K_SPACE] and not prev:
+    #     if cur == 0:
+    #         print("DIV")
+    #         cur = 1
+    #     else:
+    #         print("ADV")
+    #         cur = 0
+    advect_scalar(density, grid)
+    prev = keys[pygame.K_SPACE]
 
     # density.field[2, 1] = 50
 
     pygame.display.flip()
-    print(grid.xgrid)
-
-    # clear_divergence(grid)
-    # advect_velocities(grid)
-    # advect_scalar(density, grid)
     time.sleep(DT)
