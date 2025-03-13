@@ -26,7 +26,7 @@ class ScalarGrid:
                     CELL_SIZE - 1,
                 )
                 draw_circle((50, 50), RED, 20)
-                color = [clamp(self.field[y, x] * 5, 0, 225)] * 3
+                color = [clamp(self.field[y, x] * 20, 0, 225)] * 3
                 # print(color)
                 pygame.draw.rect(
                     screen,
