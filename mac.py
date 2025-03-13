@@ -39,7 +39,9 @@ class MacGrid:
             for y in range(HEIGHT):
                 pos = np.array([x + 0.5, y + 0.5])
                 val = self.interpolate_velocity(pos)
-                draw_line(pos, pos + val, RED)
+                if np.sum(np.abs(val)) > 0:
+                    draw_circle(pos, GREEN, 2)
+                draw_line(pos, pos + val, WHITE)
 
     def draw_mouse(self):
         x, y = get_mouse_coords()

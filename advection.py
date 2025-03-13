@@ -22,7 +22,7 @@ def advect_velocities(grid: MacGrid):
             nv = grid.interpolate_velocity(new_pos)
 
             # grid.xgrid[i, j] = nv[0]
-            xtemp[i, j] = nv[0]
+            xtemp[j, i] = nv[0]
     for i in range(1, WIDTH):
         for j in range(1, HEIGHT - 1):
             pos = np.array([i + 0.5, j])
@@ -32,12 +32,14 @@ def advect_velocities(grid: MacGrid):
             new_pos[1] = clamp(new_pos[1], 1, HEIGHT - 1)
             nv = grid.interpolate_velocity(new_pos)
             # grid.ygrid[i, j] = nv[1]
-            ytemp[i, j] = nv[1]
+            ytemp[j, i] = nv[1]
     grid.xgrid = xtemp.copy()
     grid.ygrid = ytemp.copy()
 
     if CONSERVATIVE_ADVECTION:
         aft = np.sum(np.abs(grid.xgrid)) + np.sum(np.abs(grid.ygrid))
+
+        # print("diff = ", pre - aft)
         if aft > 0:
             grid.xgrid *= pre / aft
             grid.ygrid *= pre / aft
@@ -62,4 +64,5 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
 
     aft = np.sum(np.abs(scalar_grid.field))
     if CONSERVATIVE_SCALAR and aft:
+        # print("diff = ", pre - aft)
         scalar_grid.field *= pre / aft

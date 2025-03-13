@@ -41,7 +41,6 @@ class ScalarGrid:
         x, y = get_mouse_coords()
         pos = np.array([x, y])
         val = self.interpolate_scalar(pos)
-        print("VAL = ", val)
         draw_circle((x, y), GREEN, val)
 
     def interpolate_scalar(self, pos):
@@ -60,8 +59,6 @@ class ScalarGrid:
             j = -1
         else:
             j = int(j)
-
-        print(" i , j = ", i, j)
 
         ic = i + 0.5
         jc = j + 0.5
