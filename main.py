@@ -62,7 +62,7 @@ density.field[2, 1] = 20
 # grid.xgrid[-1, 3] = 5
 
 
-# grid.xgrid[2, 1] = 0.7
+grid.xgrid[2, 1] = 0.7
 while running:
     screen.fill(RED)
     for event in pygame.event.get():
@@ -72,7 +72,7 @@ while running:
     grid.draw_mouse()
     density.draw()
 
-    print(np.array(density.field, dtype=int))
+    print(np.round(density.field, 2))
     print("sum dens = ", np.sum(density.field))
     grid.draw_centers()
     density.draw_mouse()
@@ -83,6 +83,6 @@ while running:
 
     # clear_divergence(grid)
     # advect_velocities(grid)
-    advect_scalar(density, grid)
+    # advect_scalar(density, grid)
     time.sleep(DT)
-    input("test")
+    # input("test")

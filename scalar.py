@@ -16,7 +16,9 @@ class ScalarGrid:
         self.field = np.zeros((HEIGHT, WIDTH))
 
     def draw(self):
-        # X
+        scale = 255 / np.max(self.field)
+        # print("max = ", np.max(self.field))
+
         for x in range(WIDTH):
             for y in range(HEIGHT):
                 rect = (
@@ -26,7 +28,8 @@ class ScalarGrid:
                     CELL_SIZE - 1,
                 )
                 draw_circle((50, 50), RED, 20)
-                color = [clamp(self.field[y, x] * 20, 0, 225)] * 3
+                color = [clamp(self.field[y, x] * scale, 0, 255) or 0] * 3
+                # print(color)
                 pygame.draw.rect(
                     screen,
                     color,
@@ -38,6 +41,7 @@ class ScalarGrid:
         x, y = get_mouse_coords()
         pos = np.array([x, y])
         val = self.interpolate_scalar(pos)
+        print("VAL = ", val)
         draw_circle((x, y), GREEN, val)
 
     def interpolate_scalar(self, pos):
@@ -45,8 +49,20 @@ class ScalarGrid:
         v = self.field
         px, py = pos[0], pos[1]
 
-        i = clamp(int(px - 0.5), 0, WIDTH - 2)
-        j = clamp(int(py - 0.5), 0, HEIGHT - 2)
+        i = clamp(px - 0.5, -1, WIDTH)
+        if i < 0:
+            i = -1
+        else:
+            i = int(i)
+
+        j = clamp(py - 0.5, -1, HEIGHT)
+        if j < 0:
+            j = -1
+        else:
+            j = int(j)
+
+        print(" i , j = ", i, j)
+
         ic = i + 0.5
         jc = j + 0.5
         draw_circle((ic, jc), GREEN)
@@ -57,13 +73,15 @@ class ScalarGrid:
         x = px - ic
         y = py - jc
 
-        # draw_line((px, py), (px - x, py), BLUE)
-        # draw_line((px, py), (px, py - y), BLUE)
+        draw_line((px, py), (px - x, py), BLUE)
+        draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
-
+        if i < WIDTH - 1:
+            ret += x * (1 - y) * v[j, i + 1]
+        if i < WIDTH - 1 and j < HEIGHT - 1:
+            ret += x * y * v[j + 1, i + 1]
+        if j < HEIGHT - 1:
+            ret += (1 - x) * y * v[j + 1, i]
         ret += (1 - x) * (1 - y) * v[j, i]
-        ret += (1 - x) * y * v[j + 1, i]
-        ret += x * (1 - y) * v[j, i + 1]
-        ret += x * y * v[j + 1, i + 1]
         return ret

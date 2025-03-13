@@ -87,7 +87,7 @@ class MacGrid:
         if i >= 0:
             ret += (1 - x) * (1 - y) * v[j, i]
             ret += (1 - x) * y * v[j + 1, i]
-        if i < 2:
+        if i < HEIGHT - 1:
             ret += x * (1 - y) * v[j, i + 1]
             ret += x * y * v[j + 1, i + 1]
         return ret
