@@ -13,7 +13,7 @@ def advect_velocities(grid: MacGrid):
 
     ytemp = grid.ygrid.copy()
     for i in range(1, WIDTH - 1):
-        for j in range(1, HEIGHT):
+        for j in range(HEIGHT):
             pos = np.array([i, j + 0.5])
             v = grid.interpolate_velocity(pos)
             new_pos = pos - v * DT
@@ -23,7 +23,7 @@ def advect_velocities(grid: MacGrid):
 
             # grid.xgrid[i, j] = nv[0]
             xtemp[j, i] = nv[0]
-    for i in range(1, WIDTH):
+    for i in range(WIDTH):
         for j in range(1, HEIGHT - 1):
             pos = np.array([i + 0.5, j])
             v = grid.interpolate_velocity(pos)

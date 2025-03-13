@@ -61,10 +61,10 @@ density = ScalarGrid()
 # grid.xgrid[-1, 3] = 5
 
 
-grid.xgrid[0, 1] = 5
-grid.ygrid[-1, 0] = -5
-grid.ygrid[0, -1] = 5
-grid.xgrid[-1, -1] = -5
+grid.xgrid[0, 0] = 0.7
+grid.ygrid[-1, 0] = -0.7
+grid.ygrid[0, -1] = 0.7
+grid.xgrid[-1, -1] = -0.7
 
 density.field[0, 0] = 80
 density.field[-1, 0] = 80
@@ -77,20 +77,21 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    # draw_cells()
-    # grid.draw_mouse()
-    density.draw()
+    draw_cells()
+    grid.draw_mouse()
+    # density.draw()
 
     # print(np.round(density.field, 2))
     grid.draw_centers()
-    input("test")
     # density.draw_mouse()
+    # input("test")
 
     # density.field[2, 1] = 50
 
     pygame.display.flip()
+    print(grid.xgrid)
 
     # clear_divergence(grid)
-    advect_velocities(grid)
-    advect_scalar(density, grid)
+    # advect_velocities(grid)
+    # advect_scalar(density, grid)
     time.sleep(DT)

@@ -107,10 +107,10 @@ class MacGrid:
         else:
             j = -1
 
-        # draw_circle((i, j + 0.5), GREEN)
-        # draw_circle((i + 1, j + 0.5), RED)
-        # draw_circle((i, j + 1.5), WHITE)
-        # draw_circle((i + 1, j + 1.5), BLUE)
+        draw_circle((i, j + 0.5), GREEN)
+        draw_circle((i + 1, j + 0.5), RED)
+        draw_circle((i, j + 1.5), WHITE)
+        draw_circle((i + 1, j + 1.5), BLUE)
 
         x = px - i
         y = py - j - 0.5
