@@ -61,7 +61,7 @@ density = ScalarGrid()
 # grid.xgrid[-1, 3] = 5
 
 
-v = 1
+v = 2
 # grid.xgrid[1, 1] = v
 # grid.ygrid[-2, 1] = -v
 # grid.ygrid[1, -2] = v
@@ -78,42 +78,42 @@ cur = 0
 while running:
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
-    density.field[:, -1] = 0
+    # density.field[:, -1] = 0
+    # grid.ygrid[:, ::2] = -0.7
+    # grid.ygrid[1:, 1::2] = 0.7
     screen.fill(BLACK)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     draw_cells()
-    grid.draw_s()
-    # grid.draw_mouse()
+    # grid.draw_s()
     density.draw()
 
-    # print(np.round(density.field, 2))
-    grid.draw()
+    # grid.draw_centers()
+    grid.draw_mouse()
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
+
     clear_divergence(grid)
-    # advect_velocities(grid)
-    # if keys[pygame.K_SPACE] and not prev:
-    #     if cur == 0:
-    #         print("DIV")
-    #         cur = 1
-    #     else:
-    #         print("ADV")
-    #         cur = 0
+    advect_velocities(grid)
     advect_scalar(density, grid)
+
     prev = keys[pygame.K_SPACE]
+
     if keys[pygame.K_SPACE]:
         density.field[HEIGHT // 2, 0] = 255
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
         print(y, x)
-        grid.s[y, x] = 0
+        grid.s[y + 1, x + 1] = -1
         grid.xgrid[y, x] = 0
         grid.xgrid[y, x + 1] = 0
         grid.ygrid[y, x] = 0
         grid.ygrid[y + 1, x] = 0
+        density.field[y, x] = 0
+
+    print(density.field[HEIGHT // 2, 2])
 
     # density.field[2, 1] = 50
 

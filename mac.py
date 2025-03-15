@@ -26,13 +26,13 @@ class MacGrid:
             for y in range(HEIGHT):
                 pos = np.array([x, y + 0.5])
                 val = np.array([self.xgrid[y, x], 0])
-                draw_line(pos, pos + val, RED)
+                draw_line(pos, pos + val, PINK)
         # Y
         for x in range(WIDTH):
             for y in range(HEIGHT + 1):
                 pos = np.array([x + 0.5, y])
                 val = np.array([0, self.ygrid[y, x]])
-                draw_line(pos, pos + val, RED)
+                draw_line(pos, pos + val, PINK)
 
     def draw_centers(self):
         for x in range(WIDTH):

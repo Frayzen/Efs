@@ -1,5 +1,5 @@
-CELL_SIZE = 50
-HEIGHT = 10
+CELL_SIZE = 30
+HEIGHT = 20
 WIDTH = 20
 DT = 0.01
 
@@ -16,3 +16,4 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 WHITE = [255] * 3
 BLACK = [0] * 3
+PINK = (255, 20, 147)
