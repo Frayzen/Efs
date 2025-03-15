@@ -47,7 +47,7 @@ class MacGrid:
         x, y = get_mouse_coords()
         pos = np.array([x, y])
         val = self.interpolate_velocity(pos)
-        # print("val - ", val)
+        print("val - ", val)
         draw_circle((x, y), GREEN, 2)
         draw_line(pos, pos + val, WHITE)
 

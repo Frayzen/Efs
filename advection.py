@@ -14,7 +14,7 @@ def advect_velocities(grid: MacGrid):
     ytemp = grid.ygrid.copy()
     for i in range(1, WIDTH):
         for j in range(HEIGHT):
-            if grid.s[j, i] == -1 or grid.s[j, i + 1] == -1:
+            if grid.s[j, i] == 0 or grid.s[j, i + 1] == 0:
                 continue
 
             pos = np.array([i, j + 0.5])
@@ -27,12 +27,13 @@ def advect_velocities(grid: MacGrid):
             xtemp[j, i] = nv[0]
     for i in range(WIDTH):
         for j in range(1, HEIGHT):
-            if grid.s[j, i] == -1 or grid.s[j + 1, i] == -1:
+            if grid.s[j, i] == 0 or grid.s[j + 1, i] == 0:
                 continue
 
             pos = np.array([i + 0.5, j])
             v = grid.interpolate_velocity(pos)
             new_pos = pos - v * DT
+
             new_pos[0] = clamp(new_pos[0], 0, WIDTH)
             new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
             nv = grid.interpolate_velocity(new_pos)
@@ -53,14 +54,17 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
 
     for i in range(WIDTH):
         for j in range(HEIGHT):
-            if velocity_grid.s[j + 1, i + 1] == 0:
-                # ftemp[j, i] = 0
-                continue
+            # if velocity_grid.s[j + 1, i + 1] == 0:
+            #     # ftemp[j, i] = 0
+            #     continue
 
             pos = np.array([i + 0.5, j + 0.5])
             vel = velocity_grid.interpolate_velocity(pos)
 
             new_pos = pos - vel * DT * 20
+            # if new_pos[0] >= WIDTH - 1:  # If new position is past the exit
+            #     ftemp[j, i] = 0  # Allow it to leave
+            #     continue
 
             new_pos[0] = clamp(new_pos[0], 0, WIDTH)
             new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
