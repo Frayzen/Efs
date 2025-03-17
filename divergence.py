@@ -21,10 +21,10 @@ def clear_divergence(mac: MacGrid):
                     s[j + 1, i + 1]
                     == 0
                 ):
-                    # u[j, i] = 0
-                    # u[j, i + 1] = 0
-                    # v[j, i] = 0
-                    # v[j + 1, i] = 0
+                    u[j, i] = 0
+                    u[j, i + 1] = 0
+                    v[j, i] = 0
+                    v[j + 1, i] = 0
                     continue
                 d = u[j, i + 1] - u[j, i] + v[j + 1, i] - v[j, i]
                 if OVERRELAXATION:

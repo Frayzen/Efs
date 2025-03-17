@@ -16,6 +16,13 @@ class ScalarGrid:
         self.field = np.zeros((HEIGHT, WIDTH))
 
     def draw(self):
+        def map_density_to_color(density):
+            normalized_density = density / 255.0  # Normalize density to 0-1
+            r = int(255 * normalized_density)
+            g = 0
+            b = int(255 * (1 - normalized_density))
+            return (r, g, b)
+
         # scale = 255 / np.max(self.field)
         # print("max = ", np.max(self.field))
 
@@ -28,7 +35,10 @@ class ScalarGrid:
                     CELL_SIZE - 1,
                 )
                 draw_circle((50, 50), RED, 20)
-                color = [clamp(self.field[y, x], 0, 255) or 0] * 3
+                # color = [clamp(self.field[y, x], 0, 255) or 0] * 3
+
+                color = map_density_to_color(clamp(self.field[y, x], 0, 255))
+                # color = [clamp((self.field[y, x] > 10) * 255, 0, 255)] * 3
                 # print(color)
                 pygame.draw.rect(
                     screen,
