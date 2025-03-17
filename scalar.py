@@ -35,17 +35,25 @@ class ScalarGrid:
                     CELL_SIZE - 1,
                 )
                 draw_circle((50, 50), RED, 20)
+
                 # color = [clamp(self.field[y, x], 0, 255) or 0] * 3
 
                 color = map_density_to_color(clamp(self.field[y, x], 0, 255))
-                # color = [clamp((self.field[y, x] > 10) * 255, 0, 255)] * 3
-                # print(color)
                 pygame.draw.rect(
                     screen,
                     color,
                     rect,
                     CELL_SIZE - 1,
                 )
+                font = pygame.font.Font(None, 24)
+                density_text = f"{self.field[y,x]:.2f}"
+                text_surface = font.render(
+                    density_text, True, (255, 255, 255)
+                )  # White text
+                text_rect = text_surface.get_rect(
+                    center=(rect[0] + CELL_SIZE // 2, rect[1] + CELL_SIZE // 2)
+                )
+                screen.blit(text_surface, text_rect)
 
     def draw_mouse(self):
         x, y = get_mouse_coords()

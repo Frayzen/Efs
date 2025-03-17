@@ -77,6 +77,15 @@ cur = 0
 # grid.s[:, -1] = 1
 # grid.s[:, 0] = 1
 v = 3
+density.field[HEIGHT // 2, 0] = 500
+x, y = 3, HEIGHT // 2
+grid.s[y + 1, x + 1] = 0
+grid.xgrid[y, x] = 0
+grid.xgrid[y, x + 1] = 0
+grid.ygrid[y, x] = 0
+grid.ygrid[y + 1, x] = 0
+density.field[y, x] = 0
+
 while running:
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
@@ -114,9 +123,18 @@ while running:
         grid.ygrid[y, x] = 0
         grid.ygrid[y + 1, x] = 0
         density.field[y, x] = 0
-    print("density = ", np.sum(density.field), "\n", "x = ", np.round(grid.xgrid, 2))
-    print()
-
+    print(
+        "density = ",
+        np.sum(density.field),
+        # "\n",
+        # "y = ",
+        # np.round(grid.ygrid, 2),
+        # "\n",
+        # "y = ",
+        # np.round(grid.ygrid, 2),
+    )
+    # input("test")
+    time.sleep(1)
     # print(grid.xgrid[HEIGHT // 2, -1])
 
     # density.field[2, 1] = 50
