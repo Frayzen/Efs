@@ -1,4 +1,5 @@
 import pygame
+import math
 from pygame.display import iconify
 from pygame.draw import circle
 from pygame.math import clamp
@@ -16,11 +17,21 @@ class ScalarGrid:
         self.field = np.zeros((HEIGHT, WIDTH))
 
     def draw(self):
+        # def map_density_to_color(density):
+        #     normalized_density = density / 255.0  # Normalize density to 0-1
+        #     r = int(255 * normalized_density)
+        #     g = 0
+        #     b = int(255 * (1 - normalized_density))
+        #     return (r, g, b)
         def map_density_to_color(density):
-            normalized_density = density / 255.0  # Normalize density to 0-1
-            r = int(255 * normalized_density)
+            # Apply logarithmic scaling
+            adjusted_density = math.log(1 + density) / math.log(1 + 255)
+
+            # Map to color
+            r = int(255 * adjusted_density)
             g = 0
-            b = int(255 * (1 - normalized_density))
+            b = int(255 * (1 - adjusted_density))
+
             return (r, g, b)
 
         # scale = 255 / np.max(self.field)

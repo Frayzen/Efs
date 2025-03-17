@@ -44,11 +44,9 @@ class MacGrid:
                 draw_line(pos, pos + val, BLUE)
 
     def draw_s(self):
-        print("here")
-        for x in range(1, WIDTH - 1):
-            for y in range(1, HEIGHT - 1):
-                print(self.s[x, y])
-                if self.s[x + 1, y + 1] == 0:
+        for x in range(WIDTH):
+            for y in range(HEIGHT):
+                if self.s[y + 1, x + 1] == 0:
                     print(x, y)
 
                     rect = (

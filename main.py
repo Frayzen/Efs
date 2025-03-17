@@ -85,7 +85,7 @@ v = 3
 # grid.ygrid[y, x] = 0
 # grid.ygrid[y + 1, x] = 0
 # density.field[y, x] = 0
-
+step = False
 while running:
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
@@ -101,7 +101,8 @@ while running:
     # grid.draw_s()
     density.draw()
 
-    grid.draw()
+    # grid.draw_s()
+    # grid.draw()
     # grid.draw_centers()
     grid.draw_mouse()
     # density.draw_mouse()
@@ -115,6 +116,7 @@ while running:
 
     if keys[pygame.K_SPACE]:
         density.field[HEIGHT // 2, 0] = 500
+        # step = True
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
         grid.s[y + 1, x + 1] = 0
@@ -123,6 +125,8 @@ while running:
         grid.ygrid[y, x] = 0
         grid.ygrid[y + 1, x] = 0
         density.field[y, x] = 0
+    if step:
+        input("test")
     # print(
     #     "density = ",
     #     np.sum(density.field),
@@ -138,8 +142,6 @@ while running:
     # print(grid.xgrid[HEIGHT // 2, -1])
 
     # density.field[2, 1] = 50
-    print("here2")
-    grid.draw_s()
 
     pygame.display.flip()
     time.sleep(DT)
