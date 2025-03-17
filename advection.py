@@ -1,5 +1,13 @@
 from pygame.math import clamp
-from consts import CONSERVATIVE_ADVECTION, CONSERVATIVE_SCALAR, DT, GREEN, HEIGHT, WIDTH
+from consts import (
+    CONSERVATIVE_ADVECTION,
+    CONSERVATIVE_SCALAR,
+    DT,
+    GREEN,
+    HEIGHT,
+    RED,
+    WIDTH,
+)
 from mac import MacGrid
 import numpy as np
 
@@ -14,7 +22,10 @@ def advect_velocities(grid: MacGrid):
     ytemp = grid.ygrid.copy()
     for i in range(1, WIDTH):
         for j in range(HEIGHT):
-            if grid.s[j, i] == 0 or grid.s[j, i + 1] == 0:
+            if i < WIDTH - 1 and (
+                grid.s[j + 1, i + 1] == 0 or grid.s[j + 1, i + 2] == 0
+            ):
+                draw_circle((i + 1, j + 0.5), GREEN)
                 continue
 
             pos = np.array([i, j + 0.5])
@@ -27,7 +38,10 @@ def advect_velocities(grid: MacGrid):
             xtemp[j, i] = nv[0]
     for i in range(WIDTH):
         for j in range(1, HEIGHT):
-            if grid.s[j, i] == 0 or grid.s[j + 1, i] == 0:
+            if j < HEIGHT - 1 and (
+                grid.s[j + 1, i + 1] == 0 or grid.s[j + 2, i + 1] == 0
+            ):
+                draw_circle((i + 0.5, j + 1), RED)
                 continue
 
             pos = np.array([i + 0.5, j])

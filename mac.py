@@ -43,6 +43,30 @@ class MacGrid:
                     draw_circle(pos, GREEN, 2)
                 draw_line(pos, pos + val, BLUE)
 
+    def draw_s(self):
+        print("here")
+        for x in range(1, WIDTH - 1):
+            for y in range(1, HEIGHT - 1):
+                print(self.s[x, y])
+                if self.s[x + 1, y + 1] == 0:
+                    print(x, y)
+
+                    rect = (
+                        x * CELL_SIZE + 1,
+                        y * CELL_SIZE + 1,
+                        CELL_SIZE - 1,
+                        CELL_SIZE - 1,
+                    )
+
+                    # color = [clamp(self.field[y, x], 0, 255) or 0] * 3
+
+                    pygame.draw.rect(
+                        screen,
+                        [0] * 3,
+                        rect,
+                        CELL_SIZE - 1,
+                    )
+
     def draw_mouse(self):
         x, y = get_mouse_coords()
         pos = np.array([x, y])
@@ -93,21 +117,21 @@ class MacGrid:
             ret += x * y * v[j + 1, i + 1]
         return ret
 
-    def draw_s(self):
-        for x in range(1, WIDTH):
-            for y in range(1, HEIGHT):
-                if self.s[y, x] == 0:
-                    pygame.draw.rect(
-                        screen,
-                        RED,
-                        (
-                            x * CELL_SIZE,
-                            y * CELL_SIZE,
-                            CELL_SIZE,
-                            CELL_SIZE,
-                        ),
-                        10,
-                    )
+    # def draw_s(self):
+    #     for x in range(1, WIDTH):
+    #         for y in range(1, HEIGHT):
+    #             if self.s[y, x] == 0:
+    #                 pygame.draw.rect(
+    #                     screen,
+    #                     RED,
+    #                     (
+    #                         x * CELL_SIZE,
+    #                         y * CELL_SIZE,
+    #                         CELL_SIZE,
+    #                         CELL_SIZE,
+    #                     ),
+    #                     10,
+    #                 )
 
     def interpolate_x(self, pos):
 
