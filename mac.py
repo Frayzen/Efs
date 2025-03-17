@@ -47,7 +47,6 @@ class MacGrid:
         for x in range(WIDTH):
             for y in range(HEIGHT):
                 if self.s[y + 1, x + 1] == 0:
-                    print(x, y)
 
                     rect = (
                         x * CELL_SIZE + 1,

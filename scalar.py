@@ -16,26 +16,14 @@ class ScalarGrid:
     def __init__(self) -> None:
         self.field = np.zeros((HEIGHT, WIDTH))
 
-    def draw(self):
-        # def map_density_to_color(density):
-        #     normalized_density = density / 255.0  # Normalize density to 0-1
-        #     r = int(255 * normalized_density)
-        #     g = 0
-        #     b = int(255 * (1 - normalized_density))
-        #     return (r, g, b)
+    def draw(self, values=False):
         def map_density_to_color(density):
-            # Apply logarithmic scaling
             adjusted_density = math.log(1 + density) / math.log(1 + 255)
-
-            # Map to color
             r = int(255 * adjusted_density)
             g = 0
             b = int(255 * (1 - adjusted_density))
 
             return (r, g, b)
-
-        # scale = 255 / np.max(self.field)
-        # print("max = ", np.max(self.field))
 
         for x in range(WIDTH):
             for y in range(HEIGHT):
@@ -56,15 +44,16 @@ class ScalarGrid:
                     rect,
                     CELL_SIZE - 1,
                 )
-                font = pygame.font.Font(None, 24)
-                density_text = f"{self.field[y,x]:.2f}"
-                text_surface = font.render(
-                    density_text, True, (255, 255, 255)
-                )  # White text
-                text_rect = text_surface.get_rect(
-                    center=(rect[0] + CELL_SIZE // 2, rect[1] + CELL_SIZE // 2)
-                )
-                screen.blit(text_surface, text_rect)
+                if values:
+                    font = pygame.font.Font(None, 24)
+                    density_text = f"{self.field[y,x]:.2f}"
+                    text_surface = font.render(
+                        density_text, True, (255, 255, 255)
+                    )  # White text
+                    text_rect = text_surface.get_rect(
+                        center=(rect[0] + CELL_SIZE // 2, rect[1] + CELL_SIZE // 2)
+                    )
+                    screen.blit(text_surface, text_rect)
 
     def draw_mouse(self):
         x, y = get_mouse_coords()

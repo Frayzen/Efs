@@ -86,9 +86,35 @@ v = 3
 # grid.ygrid[y + 1, x] = 0
 # density.field[y, x] = 0
 step = False
+
+
+def set_obstacle(x, y):
+    grid.s[y + 1, x + 1] = 0
+    grid.xgrid[y, x] = 0
+    grid.xgrid[y, x + 1] = 0
+    grid.ygrid[y, x] = 0
+    grid.ygrid[y + 1, x] = 0
+    density.field[y, x] = 0
+
+
+# set_obstacle(4, 8)
+# set_obstacle(5, 8)
+# set_obstacle(6, 8)
+# set_obstacle(6, 8)
+# set_obstacle(7, 8)
+# set_obstacle(7, 9)
+# set_obstacle(7, 10)
+# set_obstacle(7, 11)
+# set_obstacle(7, 12)
+# set_obstacle(6, 12)
+# set_obstacle(5, 12)
+# set_obstacle(4, 12)
+
+
 while running:
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
+    density.field[HEIGHT // 2, 0] = 3000
     # density.field[:, -1] = 0
     # grid.ygrid[:, ::2] = -0.7
     # grid.ygrid[1:, 1::2] = 0.7
@@ -101,7 +127,7 @@ while running:
     # grid.draw_s()
     density.draw()
 
-    # grid.draw_s()
+    grid.draw_s()
     # grid.draw()
     # grid.draw_centers()
     grid.draw_mouse()
@@ -119,12 +145,7 @@ while running:
         # step = True
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
-        grid.s[y + 1, x + 1] = 0
-        grid.xgrid[y, x] = 0
-        grid.xgrid[y, x + 1] = 0
-        grid.ygrid[y, x] = 0
-        grid.ygrid[y + 1, x] = 0
-        density.field[y, x] = 0
+        set_obstacle(x, y)
     if step:
         input("test")
     # print(
