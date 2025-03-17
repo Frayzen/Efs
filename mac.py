@@ -34,19 +34,19 @@ class MacGrid:
                 val = np.array([0, self.ygrid[y, x]])
                 draw_line(pos, pos + val, RED)
 
-    def draw_centers(self):
+    def draw_centers(self, weight=1.0):
         for x in range(WIDTH):
             for y in range(HEIGHT):
                 pos = np.array([x + 0.5, y + 0.5])
-                val = self.interpolate_velocity(pos)
+                val = self.interpolate_velocity(pos) * weight
                 if np.sum(np.abs(val)) > 0:
                     draw_circle(pos, GREEN, 2)
                 draw_line(pos, pos + val, BLUE)
 
-    def draw_mouse(self):
+    def draw_mouse(self, weight=1.0):
         x, y = get_mouse_coords()
         pos = np.array([x, y])
-        val = self.interpolate_velocity(pos)
+        val = self.interpolate_velocity(pos) * weight
         # print("val - ", val)
         draw_circle((x, y), GREEN, 2)
         draw_line(pos, pos + val, WHITE)
@@ -95,19 +95,18 @@ class MacGrid:
         return ret
 
     def draw_s(self):
-        for x in range(1, WIDTH):
-            for y in range(1, HEIGHT):
+        for x in range(1, WIDTH + 1):
+            for y in range(1, HEIGHT + 1):
                 if self.s[y, x] == 0:
                     pygame.draw.rect(
                         screen,
                         RED,
                         (
-                            x * CELL_SIZE,
-                            y * CELL_SIZE,
+                            (x - 1) * CELL_SIZE,
+                            (y - 1) * CELL_SIZE,
                             CELL_SIZE,
                             CELL_SIZE,
                         ),
-                        10,
                     )
 
     def interpolate_x(self, pos):

@@ -11,25 +11,35 @@ def advect_velocities(grid: MacGrid):
     pre = np.sum(np.abs(grid.xgrid)) + np.sum(np.abs(grid.ygrid))
     xtemp = grid.xgrid.copy()
 
+    n = 2
+
     ytemp = grid.ygrid.copy()
     for i in range(1, WIDTH):
         for j in range(HEIGHT):
+            if xtemp[j, i] == 0:
+                continue
             pos = np.array([i, j + 0.5])
+            for _ in range(n):
+                v = grid.interpolate_velocity(pos)
+                pos = pos - v * DT
             v = grid.interpolate_velocity(pos)
-            new_pos = pos - v * DT
-            new_pos[0] = clamp(new_pos[0], 0, WIDTH)
-            new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
-            nv = grid.interpolate_velocity(new_pos)
+            pos[0] = clamp(pos[0], 0, WIDTH)
+            pos[1] = clamp(pos[1], 0, HEIGHT)
+            nv = grid.interpolate_velocity(pos)
 
             xtemp[j, i] = nv[0]
     for i in range(WIDTH):
         for j in range(1, HEIGHT):
+            if ytemp[j, i] == 0:
+                continue
             pos = np.array([i + 0.5, j])
+            for _ in range(n):
+                v = grid.interpolate_velocity(pos)
+                pos = pos - v * DT
             v = grid.interpolate_velocity(pos)
-            new_pos = pos - v * DT
-            new_pos[0] = clamp(new_pos[0], 0, WIDTH)
-            new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
-            nv = grid.interpolate_velocity(new_pos)
+            pos[0] = clamp(pos[0], 0, WIDTH)
+            pos[1] = clamp(pos[1], 0, HEIGHT)
+            nv = grid.interpolate_velocity(pos)
             ytemp[j, i] = nv[1]
     grid.xgrid = xtemp.copy()
     grid.ygrid = ytemp.copy()
@@ -45,14 +55,18 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
     pre = np.sum(np.abs(scalar_grid.field))
     ftemp = scalar_grid.field
 
+    n = 5
+
     for i in range(WIDTH):
         for j in range(HEIGHT):
             if velocity_grid.s[j + 1, i + 1] == 0:
                 continue
             pos = np.array([i + 0.5, j + 0.5])
-            vel = velocity_grid.interpolate_velocity(pos)
+            for _ in range(n):
+                vel = velocity_grid.interpolate_velocity(pos)
+                pos = pos - vel * DT
 
-            new_pos = pos - vel * DT * 20
+            new_pos = pos - vel * DT
             new_pos[0] = clamp(new_pos[0], 0, WIDTH)
             new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
             nv = scalar_grid.interpolate_scalar(new_pos)
