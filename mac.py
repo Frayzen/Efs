@@ -20,18 +20,18 @@ class MacGrid:
         self.s = np.ones((HEIGHT, WIDTH))
         self.s = np.pad(self.s, pad_width=1, mode="constant", constant_values=0)
 
-    def draw(self):
+    def draw(self, weight=1.0):
         # X
         for x in range(WIDTH + 1):
             for y in range(HEIGHT):
                 pos = np.array([x, y + 0.5])
-                val = np.array([self.xgrid[y, x], 0])
+                val = weight * np.array([self.xgrid[y, x], 0])
                 draw_line(pos, pos + val, RED)
         # Y
         for x in range(WIDTH):
             for y in range(HEIGHT + 1):
                 pos = np.array([x + 0.5, y])
-                val = np.array([0, self.ygrid[y, x]])
+                val = weight * np.array([0, self.ygrid[y, x]])
                 draw_line(pos, pos + val, RED)
 
     def draw_centers(self, weight=1.0):
@@ -46,22 +46,22 @@ class MacGrid:
     def draw_mouse(self, weight=1.0):
         x, y = get_mouse_coords()
         pos = np.array([x, y])
-        val = self.interpolate_velocity(pos) * weight
+        val = self.interpolate_velocity(pos, True) * weight
         # print("val - ", val)
         draw_circle((x, y), GREEN, 2)
-        draw_line(pos, pos + val, WHITE)
+        draw_line(pos, pos + val, RED, 3)
 
-    def interpolate_velocity(self, pos):
+    def interpolate_velocity(self, pos, draw=False):
 
         return np.array(
             [
-                self.interpolate_x(pos),
+                self.interpolate_x(pos, draw),
                 # 0,
-                self.interpolate_y(pos),
+                self.interpolate_y(pos, False),
             ]
         )
 
-    def interpolate_y(self, pos):
+    def interpolate_y(self, pos, draw=False):
 
         v = self.ygrid
         px, py = pos[0], pos[1]
@@ -74,16 +74,18 @@ class MacGrid:
         else:
             i = -1
 
-        # draw_circle((i + 0.5, j), GREEN)
-        # draw_circle((i + 1.5, j), RED)
-        # draw_circle((i + 0.5, j + 1), WHITE)
-        # draw_circle((i + 1.5, j + 1), BLUE)
-
         x = px - i - 0.5
         y = py - j
+        assert x >= 0 and x <= 1
+        assert y >= 0 and x <= 1
 
-        # draw_line((px, py), (px - x, py), BLUE)
-        # draw_line((px, py), (px, py - y), BLUE)
+        if draw:
+            draw_circle((i + 0.5, j), GREEN)
+            draw_circle((i + 1.5, j), RED)
+            draw_circle((i + 0.5, j + 1), WHITE)
+            draw_circle((i + 1.5, j + 1), BLUE)
+            draw_line((px, py), (px - x, py), BLUE)
+            draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
         if i >= 0 and i < WIDTH:
@@ -109,7 +111,7 @@ class MacGrid:
                         ),
                     )
 
-    def interpolate_x(self, pos):
+    def interpolate_x(self, pos, draw=False):
 
         u = self.xgrid
         px, py = pos[0], pos[1]
@@ -122,16 +124,19 @@ class MacGrid:
         else:
             j = -1
 
-        # draw_circle((i, j + 0.5), GREEN)
-        # draw_circle((i + 1, j + 0.5), RED)
-        # draw_circle((i, j + 1.5), WHITE)
-        # draw_circle((i + 1, j + 1.5), BLUE)
-
         x = px - i
         y = py - j - 0.5
 
-        # draw_line((px, py), (px - x, py), BLUE)
-        # draw_line((px, py), (px, py - y), BLUE)
+        assert x >= 0 and x <= 1
+        assert y >= 0 and x <= 1
+
+        if draw:
+            draw_circle((i, j + 0.5), GREEN)
+            draw_circle((i + 1, j + 0.5), RED)
+            draw_circle((i, j + 1.5), WHITE)
+            draw_circle((i + 1, j + 1.5), BLUE)
+            draw_line((px, py), (px - x, py), BLUE)
+            draw_line((px, py), (px, py - y), BLUE)
 
         ret = 0
         if j >= 0 and j < HEIGHT:

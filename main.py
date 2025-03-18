@@ -1,6 +1,4 @@
 import pygame
-
-import pygame
 import time
 import numpy as np
 from pygame.math import clamp
@@ -87,10 +85,11 @@ while running:
     density.draw()
     draw_cells()
     grid.draw_s()
-    grid.draw_mouse()
+    grid.draw_mouse(0.1)
 
     # print(np.round(density.field, 2))
-    # grid.draw_centers()
+    grid.draw(0.1)
+    # grid.draw_centers(0.2)
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
     clear_divergence(grid)

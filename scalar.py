@@ -11,11 +11,28 @@ def get_mouse_coords():
     return np.array(pygame.mouse.get_pos()) / CELL_SIZE
 
 
+import math
+
+
+def map_density_to_heatmap(density):
+    density = clamp(density, 0, 255)
+    if density < 0.5:
+        return (0, 0, 0)
+
+    adjusted_density = math.log(1 + density) / math.log(1 + 255)
+
+    r = int(255 * min(1, adjusted_density * 2))
+    g = int(255 * max(0, (adjusted_density - 0.5) * 2))
+    b = int(255 * (1 - adjusted_density))
+
+    return (r, g, b)
+
+
 class ScalarGrid:
     def __init__(self) -> None:
         self.field = np.zeros((HEIGHT, WIDTH))
 
-    def draw(self):
+    def draw(self, colorful=True):
         # scale = 255 / np.max(self.field)
         # print("max = ", np.max(self.field))
 
@@ -28,7 +45,10 @@ class ScalarGrid:
                     CELL_SIZE - 1,
                 )
                 draw_circle((50, 50), RED, 20)
-                color = [clamp(self.field[y, x], 0, 255) or 0] * 3
+                if colorful:
+                    color = map_density_to_heatmap(self.field[y, x])
+                else:
+                    color = [clamp(self.field[y, x], 0, 255) or 0] * 3
                 # print(color)
                 pygame.draw.rect(
                     screen,
