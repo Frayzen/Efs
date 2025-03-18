@@ -109,9 +109,9 @@ def check_sym(m):
 
 
 while running:
-    set_obstacle(WIDTH // 2, HEIGHT // 2, True)
-    set_obstacle(WIDTH // 2, HEIGHT // 2 + 1, True)
-    set_obstacle(WIDTH // 2, HEIGHT // 2 - 1, True)
+    # set_obstacle(WIDTH // 2, HEIGHT // 2, True)
+    # set_obstacle(WIDTH // 2, HEIGHT // 2 + 1, True)
+    # set_obstacle(WIDTH // 2, HEIGHT // 2 - 1, True)
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
     density.field[HEIGHT // 2, 0] = 225

@@ -24,12 +24,8 @@ def advect_velocities(grid: MacGrid):
     ytemp = grid.ygrid.copy()
     for i in range(1, WIDTH):
         for j in range(HEIGHT):
-            if (
-                i < WIDTH - 1
-                and i > 1
-                and (grid.s[j + 1, i + 1] == 0 or grid.s[j + 1, i + 2] == 0)
-            ):
-                # draw_circle((i + 1, j + 0.5), GREEN)
+            if grid.s[j + 1, i] == 0 or grid.s[j + 1, i + 1] == 0:
+                draw_circle((i, j + 0.5), GREEN)
 
                 continue
 
@@ -43,12 +39,8 @@ def advect_velocities(grid: MacGrid):
             xtemp[j, i] = nv[0]
     for i in range(WIDTH):
         for j in range(1, HEIGHT):
-            if (
-                j < HEIGHT - 1
-                and j > 1
-                and (grid.s[j + 1, i + 1] == 0 or grid.s[j + 2, i + 1] == 0)
-            ):
-                # draw_circle((i + 0.5, j + 1), RED)
+            if grid.s[j, i + 1] == 0 or grid.s[j + 1, i + 1] == 0:
+                draw_circle((i + 0.5, j), RED)
                 continue
 
             pos = np.array([i + 0.5, j])
