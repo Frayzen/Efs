@@ -110,6 +110,8 @@ def check_sym(m):
 
 while running:
     set_obstacle(WIDTH // 2, HEIGHT // 2, True)
+    set_obstacle(WIDTH // 2, HEIGHT // 2 + 1, True)
+    set_obstacle(WIDTH // 2, HEIGHT // 2 - 1, True)
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
     density.field[HEIGHT // 2, 0] = 225
@@ -140,24 +142,6 @@ while running:
         x, y = get_mouse_coords_int()
         set_obstacle(x, y, to_wall)
     check_sym(grid.ygrid)
-    input("test")
-
-    # if step:
-    # print(
-    #     "density = ",
-    #     np.sum(density.field),
-    #     # "\n",
-    #     # "y = ",
-    #     # np.round(grid.ygrid, 2),
-    #     # "\n",
-    #     # "y = ",
-    #     # np.round(grid.ygrid, 2),
-    # )
-    # input("test")
-    # time.sleep(1)
-    # print(grid.xgrid[HEIGHT // 2, -1])
-
-    # density.field[2, 1] = 50
 
     pygame.display.flip()
     time.sleep(DT)
