@@ -27,17 +27,13 @@ class ScalarGrid:
 
         def map_density_to_heatmap(density):
             if density < 0.5:
-                return (0, 0, 0)  # Pure black for empty regions
+                return (0, 0, 0)
 
-            # Logarithmic scaling for better visibility
             adjusted_density = math.log(1 + density) / math.log(1 + 255)
 
-            # Heatmap transition: Blue → Red → Yellow → White
-            r = int(255 * min(1, adjusted_density * 2))  # Red increases
-            g = int(
-                255 * max(0, (adjusted_density - 0.5) * 2)
-            )  # Green increases at higher values
-            b = int(255 * (1 - adjusted_density))  # Blue decreases
+            r = int(255 * min(1, adjusted_density * 2))
+            g = int(255 * max(0, (adjusted_density - 0.5) * 2))
+            b = int(255 * (1 - adjusted_density))
 
             return (r, g, b)
 
@@ -63,9 +59,7 @@ class ScalarGrid:
                 if values:
                     font = pygame.font.Font(None, 24)
                     density_text = f"{self.field[y,x]:.2f}"
-                    text_surface = font.render(
-                        density_text, True, (255, 255, 255)
-                    )  # White text
+                    text_surface = font.render(density_text, True, (255, 255, 255))
                     text_rect = text_surface.get_rect(
                         center=(rect[0] + CELL_SIZE // 2, rect[1] + CELL_SIZE // 2)
                     )

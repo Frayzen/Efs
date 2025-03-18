@@ -109,18 +109,16 @@ def check_sym(m):
 
 
 while running:
+    set_obstacle(WIDTH // 2, HEIGHT // 2, True)
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
     density.field[HEIGHT // 2, 0] = 225
-    # density.field[:, -1] = 0
-    # grid.ygrid[:, ::2] = -0.7
-    # grid.ygrid[1:, 1::2] = 0.7
     screen.fill(BLACK)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    draw_cells()
+    # draw_cells()
     # grid.draw_s()
     density.draw()
 
@@ -130,7 +128,6 @@ while running:
     grid.draw_mouse()
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
-    # if to_wall:
     clear_divergence(grid)
     advect_velocities(grid)
     advect_scalar(density, grid)
@@ -143,7 +140,8 @@ while running:
         x, y = get_mouse_coords_int()
         set_obstacle(x, y, to_wall)
     check_sym(grid.ygrid)
-    # input("test")
+    input("test")
+
     # if step:
     # print(
     #     "density = ",
