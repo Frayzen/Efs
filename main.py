@@ -85,11 +85,11 @@ v = 3
 # grid.ygrid[y, x] = 0
 # grid.ygrid[y + 1, x] = 0
 # density.field[y, x] = 0
-step = False
+to_wall = False
 
 
-def set_obstacle(x, y):
-    grid.s[y + 1, x + 1] = 0
+def set_obstacle(x, y, to_wall):
+    grid.s[y + 1, x + 1] = 1 if to_wall else 0
     grid.xgrid[y, x] = 0
     grid.xgrid[y, x + 1] = 0
     grid.ygrid[y, x] = 0
@@ -97,24 +97,21 @@ def set_obstacle(x, y):
     density.field[y, x] = 0
 
 
-# set_obstacle(4, 8)
-# set_obstacle(5, 8)
-# set_obstacle(6, 8)
-# set_obstacle(6, 8)
-# set_obstacle(7, 8)
-# set_obstacle(7, 9)
-# set_obstacle(7, 10)
-# set_obstacle(7, 11)
-# set_obstacle(7, 12)
-# set_obstacle(6, 12)
-# set_obstacle(5, 12)
-# set_obstacle(4, 12)
+def check_sym(m):
+    h, w = m.shape
+    res = np.zeros(shape=(h // 2, w))
+    for j in range(0, h // 2):
+        for i in range(0, w):
+            res[j, i] = np.abs(m[j, i] - m[h // 2 - j, i])
+    res = np.round(res, 4).max(axis=1)
+    print(res)
+    return res
 
 
 while running:
     grid.xgrid[:, 0] = v
     grid.xgrid[:, -1] = v
-    density.field[HEIGHT // 2, 0] = 3000
+    density.field[HEIGHT // 2, 0] = 225
     # density.field[:, -1] = 0
     # grid.ygrid[:, ::2] = -0.7
     # grid.ygrid[1:, 1::2] = 0.7
@@ -133,7 +130,7 @@ while running:
     grid.draw_mouse()
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
-
+    # if to_wall:
     clear_divergence(grid)
     advect_velocities(grid)
     advect_scalar(density, grid)
@@ -141,13 +138,13 @@ while running:
     prev = keys[pygame.K_SPACE]
 
     if keys[pygame.K_SPACE]:
-        density.field[HEIGHT // 2, 0] = 500
-        # step = True
+        to_wall = not to_wall
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
-        set_obstacle(x, y)
-    if step:
-        input("test")
+        set_obstacle(x, y, to_wall)
+    check_sym(grid.ygrid)
+    # input("test")
+    # if step:
     # print(
     #     "density = ",
     #     np.sum(density.field),

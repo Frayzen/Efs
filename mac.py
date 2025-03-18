@@ -59,7 +59,7 @@ class MacGrid:
 
                     pygame.draw.rect(
                         screen,
-                        [0] * 3,
+                        [200] * 3,
                         rect,
                         CELL_SIZE - 1,
                     )
