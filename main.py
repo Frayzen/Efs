@@ -104,7 +104,7 @@ def check_sym(m):
         for i in range(0, w):
             res[j, i] = np.abs(m[j, i] - m[h // 2 - j, i])
     res = np.round(res, 4).max(axis=1)
-    print(res)
+    # print(res)
     return res
 
 
