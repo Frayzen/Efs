@@ -5,7 +5,7 @@ from ui import draw_circle
 
 
 def clear_divergence(mac: MacGrid):
-    n = 20
+    n = 25
     u = mac.xgrid
     v = mac.ygrid
 

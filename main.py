@@ -104,7 +104,7 @@ def check_sym(m):
         for i in range(0, w):
             res[j, i] = np.abs(m[j, i] - m[h // 2 - j, i])
     res = np.round(res, 4).max(axis=1)
-    # print(res)
+    print(res.max().max())
     return res
 
 
@@ -130,9 +130,9 @@ while running:
     grid.draw_mouse()
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
-    clear_divergence(grid)
     advect_velocities(grid)
     advect_scalar(density, grid)
+    clear_divergence(grid)
 
     prev = keys[pygame.K_SPACE]
 

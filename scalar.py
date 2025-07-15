@@ -25,17 +25,33 @@ class ScalarGrid:
 
             return (r, g, b)
 
+        # def map_density_to_heatmap(density):
+        #     if density < 0.01:
+        #         return (0, 0, 0)
+
+        #     # adjusted_density = math.log(1 + density) / math.log(1 + 255)
+
+
+        #     r = int(255 * min(1, adjusted_density * 2))
+        #     g = int(255 * max(0, (adjusted_density - 0.5) * 2))
+        #     b = int(255 * (1 - adjusted_density))
+
+        #     return (r, g, b)
+
         def map_density_to_heatmap(density):
-            if density < 0.5:
+            if density < 0.01:
                 return (0, 0, 0)
 
-            adjusted_density = math.log(1 + density) / math.log(1 + 255)
+            # Logarithmic scaling, but clamp output between 0 and 1
+            adjusted_density = math.log(1 + density * 10) / math.log(1 + 10)
+            adjusted_density = min(1.0, max(0.0, adjusted_density))  # clamp!
 
             r = int(255 * min(1, adjusted_density * 2))
-            g = int(255 * max(0, (adjusted_density - 0.5) * 2))
-            b = int(255 * (1 - adjusted_density))
+            g = int(255 * max(0, min(1, (adjusted_density - 0.5) * 2)))
+            b = int(255 * max(0, min(1, 1 - adjusted_density)))
 
             return (r, g, b)
+
 
         for x in range(WIDTH):
             for y in range(HEIGHT):

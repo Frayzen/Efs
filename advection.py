@@ -25,7 +25,7 @@ def advect_velocities(grid: MacGrid):
     for i in range(1, WIDTH):
         for j in range(HEIGHT):
             if grid.s[j + 1, i] == 0 or grid.s[j + 1, i + 1] == 0:
-                draw_circle((i, j + 0.5), GREEN)
+                # draw_circle((i, j + 0.5), GREEN)
 
                 continue
 
@@ -76,7 +76,7 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
             new_pos = pos - vel * DT
             new_pos[0] = clamp(new_pos[0], 0, WIDTH)
             new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
-            draw_line(pos, pos - vel * DT * 2, GREEN, 3)
+            draw_line(pos, pos - vel * DT * 2.5, WHITE, 3)
 
             nv = scalar_grid.interpolate_scalar(new_pos)
 
