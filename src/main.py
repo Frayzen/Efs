@@ -6,6 +6,7 @@ import numpy as np
 from pygame.math import clamp
 from advection import advect_scalar, advect_velocities
 from divergence import clear_divergence
+from draw import draw_ui
 from mac import MacGrid, get_mouse_coords_int
 from scalar import ScalarGrid
 from ui import screen
@@ -104,38 +105,52 @@ def check_sym(m):
         for i in range(0, w):
             res[j, i] = np.abs(m[j, i] - m[h // 2 - j, i])
     res = np.round(res, 4).max(axis=1)
-    print(res.max().max())
+    print("sim = ", res.max().max())
     return res
 
+def arrow_wall():
+    set_obstacle(WIDTH // 2  , HEIGHT // 2, True)
+    cur = 4
+    for i in range(3):
+        # if i % 2 == 0:
+        cur += 2
+        set_obstacle(WIDTH // 2 + cur - 4, HEIGHT // 2+ i, False)
+        set_obstacle(WIDTH // 2  + cur- 4, HEIGHT // 2- i, False)
 
+
+pause = False
 while running:
-    # set_obstacle(WIDTH // 2, HEIGHT // 2, True)
-    # set_obstacle(WIDTH // 2, HEIGHT // 2 + 1, True)
-    # set_obstacle(WIDTH // 2, HEIGHT // 2 - 1, True)
-    grid.xgrid[:, 0] = v
-    grid.xgrid[:, -1] = v
-    density.field[HEIGHT // 2, 0] = 225
+    # set_obstacle(WIDTH -3, HEIGHT // 2, False)
+
+    if not pause:
+        grid.xgrid[:, 0] = v
+        grid.xgrid[:, -1] = v
+    density.field[HEIGHT // 2 -1, 0 ] = 225
+    density.field[HEIGHT // 2, 0 ] = 225
     screen.fill(BLACK)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # draw_cells()
-    # grid.draw_s()
     density.draw()
-
     grid.draw_s()
-    # grid.draw()
-    # grid.draw_centers()
+
+    grid.draw_centers()
     grid.draw_mouse()
+    draw_ui(screen)
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
-    advect_velocities(grid)
-    advect_scalar(density, grid)
-    clear_divergence(grid)
+    if not pause:
+        advect_velocities(grid)
+        advect_scalar(density, grid)
+        clear_divergence(grid)
 
     prev = keys[pygame.K_SPACE]
 
+    if keys[pygame.K_p]:
+        time.sleep(0.4)
+        pause = not pause
+        time.sleep(0.4)
     if keys[pygame.K_SPACE]:
         to_wall = not to_wall
     if pygame.mouse.get_pressed()[0]:
@@ -145,3 +160,5 @@ while running:
 
     pygame.display.flip()
     time.sleep(DT)
+    # input()
+

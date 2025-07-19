@@ -34,14 +34,26 @@ class MacGrid:
                 val = np.array([0, self.ygrid[y, x]])
                 draw_line(pos, pos + val, PINK)
 
+    # def draw_centers(self):
+    #     for x in range(WIDTH):
+    #         for y in range(HEIGHT):
+    #             pos = np.array([x + 0.5, y + 0.5])
+    #             val = self.interpolate_velocity(pos)
+    #             if np.sum(np.abs(val)) > 0:
+    #                 draw_circle(pos, GREEN, 2)
+    #                 draw_line(pos, pos + val * 0.2, RED)
+
+
+
     def draw_centers(self):
         for x in range(WIDTH):
             for y in range(HEIGHT):
                 pos = np.array([x + 0.5, y + 0.5])
                 val = self.interpolate_velocity(pos)
                 if np.sum(np.abs(val)) > 0:
-                    draw_circle(pos, GREEN, 2)
-                draw_line(pos, pos + val, BLUE)
+                    draw_circle(pos + val *0.2,GREEN, radius=3)
+                    draw_line(pos, pos + val * 0.2, RED)
+
 
     def draw_s(self):
         for x in range(WIDTH):
