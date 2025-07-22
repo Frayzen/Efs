@@ -20,6 +20,10 @@ class MacGrid:
         self.s = np.ones((HEIGHT, WIDTH))
         self.s = np.pad(self.s, pad_width=1, mode="constant", constant_values=0)
 
+    def in_bounds(self, pos):
+        """Check if a position is inside the fluid grid domain."""
+        return 0 <= pos[0] < WIDTH and 0 <= pos[1] < HEIGHT
+
     def draw(self):
         # X
         for x in range(WIDTH + 1):

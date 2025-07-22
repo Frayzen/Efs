@@ -156,7 +156,7 @@ while running:
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
         set_obstacle(x, y, to_wall)
-    check_sym(grid.ygrid)
+    # check_sym(grid.ygrid)
 
     pygame.display.flip()
     time.sleep(DT)

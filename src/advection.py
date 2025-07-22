@@ -1,4 +1,5 @@
 from pygame.math import clamp
+from advections_utils import *
 from consts import (
     CONSERVATIVE_ADVECTION,
     CONSERVATIVE_SCALAR,
@@ -16,41 +17,39 @@ import numpy as np
 from scalar import ScalarGrid
 from ui import draw_circle, draw_line
 
-
 def advect_velocities(grid: MacGrid):
     pre = np.sum(np.abs(grid.xgrid)) + np.sum(np.abs(grid.ygrid))
     xtemp = grid.xgrid.copy()
-
     ytemp = grid.ygrid.copy()
+
     for i in range(1, WIDTH):
         for j in range(HEIGHT):
             if grid.s[j + 1, i] == 0 or grid.s[j + 1, i + 1] == 0:
-                # draw_circle((i, j + 0.5), GREEN)
-
                 continue
 
             pos = np.array([i, j + 0.5])
             v = grid.interpolate_velocity(pos)
             new_pos = pos - v * DT
-            new_pos[0] = clamp(new_pos[0], 0, WIDTH)
-            new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
-            nv = grid.interpolate_velocity(new_pos)
+
+            # Use your reflection handler here:
+            nv = velocity_advection_reflect_off_wall(new_pos, grid)
 
             xtemp[j, i] = nv[0]
+
     for i in range(WIDTH):
         for j in range(1, HEIGHT):
             if grid.s[j, i + 1] == 0 or grid.s[j + 1, i + 1] == 0:
-                # draw_circle((i + 0.5, j), RED)
                 continue
 
             pos = np.array([i + 0.5, j])
             v = grid.interpolate_velocity(pos)
             new_pos = pos - v * DT
 
-            new_pos[0] = clamp(new_pos[0], 0, WIDTH)
-            new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
-            nv = grid.interpolate_velocity(new_pos)
+            # Use your reflection handler here:
+            nv = velocity_advection_reflect_off_wall(new_pos, grid)
+
             ytemp[j, i] = nv[1]
+
     grid.xgrid = xtemp.copy()
     grid.ygrid = ytemp.copy()
 
@@ -63,7 +62,7 @@ def advect_velocities(grid: MacGrid):
 
 def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
     pre = np.sum(np.abs(scalar_grid.field))
-    ftemp = scalar_grid.field
+    ftemp = scalar_grid.field.copy()
 
     for i in range(WIDTH):
         for j in range(HEIGHT):
@@ -72,17 +71,16 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
 
             pos = np.array([i + 0.5, j + 0.5])
             vel = velocity_grid.interpolate_velocity(pos)
-
             new_pos = pos - vel * DT
-            new_pos[0] = clamp(new_pos[0], 0, WIDTH)
-            new_pos[1] = clamp(new_pos[1], 0, HEIGHT)
 
-            nv = scalar_grid.interpolate_scalar(new_pos)
+            # Use the reflection-based boundary handler here:
+            nv = scalar_advection_reflect_off_wall(new_pos, velocity_grid, scalar_grid)
 
             ftemp[j, i] = nv
+
     scalar_grid.field = ftemp.copy()
 
     aft = np.sum(np.abs(scalar_grid.field))
     if CONSERVATIVE_SCALAR and aft:
-        # print("diff = ", pre - aft)
         scalar_grid.field *= pre / aft
+
