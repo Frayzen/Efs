@@ -32,7 +32,7 @@ def advect_velocities(grid: MacGrid):
             new_pos = pos - v * DT
 
             # Use your reflection handler here:
-            nv = velocity_advection_reflect_off_wall(new_pos, grid)
+            nv = velocity_advection_mclamp(new_pos, grid)
 
             xtemp[j, i] = nv[0]
 
@@ -46,7 +46,7 @@ def advect_velocities(grid: MacGrid):
             new_pos = pos - v * DT
 
             # Use your reflection handler here:
-            nv = velocity_advection_reflect_off_wall(new_pos, grid)
+            nv = velocity_advection_mclamp(new_pos, grid)
 
             ytemp[j, i] = nv[1]
 
@@ -74,7 +74,7 @@ def advect_scalar(scalar_grid: ScalarGrid, velocity_grid: MacGrid):
             new_pos = pos - vel * DT
 
             # Use the reflection-based boundary handler here:
-            nv = scalar_advection_reflect_off_wall(new_pos, velocity_grid, scalar_grid)
+            nv = scalar_advection_mclamp(new_pos, velocity_grid, scalar_grid)
 
             ftemp[j, i] = nv
 

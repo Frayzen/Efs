@@ -8,8 +8,9 @@ from mac import MacGrid
 import numpy as np
 
 from scalar import ScalarGrid
+from ui import draw_circle, draw_line
 
-def velocity_advection_zero_on_invalid(pos, grid: MacGrid):
+def velocity_advection_mzero(pos, grid: MacGrid):
     if not grid.in_bounds(pos):
         return np.array([0.0, 0.0])
     
@@ -19,7 +20,7 @@ def velocity_advection_zero_on_invalid(pos, grid: MacGrid):
 
     return grid.interpolate_velocity(pos)
 
-def velocity_advection_clamp_to_fluid(pos, grid: MacGrid):
+def velocity_advection_mclamp(pos, grid: MacGrid):
     i, j = int(pos[0]), int(pos[1])
     if not grid.in_bounds(pos) or grid.s[min(j + 1, HEIGHT), min(i + 1, WIDTH)] == 0:
         for dj in [-1, 0, 1]:
@@ -41,7 +42,7 @@ def compute_wall_normal(i, j, s):
     return n / norm if norm > 1e-5 else np.array([0.0, 0.0])
 
 
-def velocity_advection_reflect_off_wall(pos, grid: MacGrid):
+def velocity_advection_mref(pos, grid: MacGrid):
     i, j = int(pos[0]), int(pos[1])
     if not grid.in_bounds(pos) or grid.s[min(j + 1, HEIGHT), min(i + 1, WIDTH)] == 0:
         v = grid.interpolate_velocity(pos)
@@ -55,7 +56,7 @@ def velocity_advection_reflect_off_wall(pos, grid: MacGrid):
 
 
 
-def scalar_advection_zero_on_invalid(pos, velocity_grid: MacGrid, scalar_grid: ScalarGrid):
+def scalar_advection_mzero(pos, velocity_grid: MacGrid, scalar_grid: ScalarGrid):
     if not velocity_grid.in_bounds(pos):
         return 0.0
     i, j = int(pos[0]), int(pos[1])
@@ -64,7 +65,7 @@ def scalar_advection_zero_on_invalid(pos, velocity_grid: MacGrid, scalar_grid: S
     return scalar_grid.interpolate_scalar(pos)
 
 
-def scalar_advection_clamp_to_fluid(pos, velocity_grid: MacGrid, scalar_grid: ScalarGrid):
+def scalar_advection_mclamp(pos, velocity_grid: MacGrid, scalar_grid: ScalarGrid):
     i, j = int(pos[0]), int(pos[1])
     if not velocity_grid.in_bounds(pos) or velocity_grid.s[min(j + 1, HEIGHT), min(i + 1, WIDTH)] == 0:
         for dj in [-1, 0, 1]:
@@ -77,7 +78,7 @@ def scalar_advection_clamp_to_fluid(pos, velocity_grid: MacGrid, scalar_grid: Sc
         return 0.0
     return scalar_grid.interpolate_scalar(pos)
 
-def scalar_advection_reflect_off_wall(pos, velocity_grid: MacGrid, scalar_grid: ScalarGrid):
+def scalar_advection_mref(pos, velocity_grid: MacGrid, scalar_grid: ScalarGrid):
     i, j = int(pos[0]), int(pos[1])
     if not velocity_grid.in_bounds(pos) or velocity_grid.s[min(j + 1, HEIGHT), min(i + 1, WIDTH)] == 0:
         vel = velocity_grid.interpolate_velocity(pos)

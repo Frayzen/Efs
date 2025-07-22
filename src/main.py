@@ -117,8 +117,24 @@ def arrow_wall():
         set_obstacle(WIDTH // 2 + cur - 4, HEIGHT // 2+ i, False)
         set_obstacle(WIDTH // 2  + cur- 4, HEIGHT // 2- i, False)
 
-
 pause = False
+
+ci= WIDTH // 2 - 5  # central x-offset
+cj = HEIGHT // 2     # central y
+
+j = 1
+for i in range(6):
+    # Right side of the V
+    set_obstacle(ci + i, cj + j, False)
+    set_obstacle(ci + i, cj - j, False)
+
+    # Left side of the V (mirrored horizontally)
+    # set_obstacle(ci - i, cj + j, False)
+    # set_obstacle(ci - i, cj - j, False)
+    j+=1 
+print(grid.s)
+# exit()
+
 while running:
     # set_obstacle(WIDTH -3, HEIGHT // 2, False)
 
@@ -141,9 +157,9 @@ while running:
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
     if not pause:
-        advect_velocities(grid)
+        # advect_velocities(grid)
         advect_scalar(density, grid)
-        clear_divergence(grid)
+        clear_divergence(grid, 1000)
 
     prev = keys[pygame.K_SPACE]
 
@@ -156,7 +172,8 @@ while running:
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
         set_obstacle(x, y, to_wall)
-    # check_sym(grid.ygrid)
+    check_sym(grid.ygrid)
+    print("density = ", np.sum(density.field))
 
     pygame.display.flip()
     time.sleep(DT)
