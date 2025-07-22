@@ -6,7 +6,6 @@ import numpy as np
 from pygame.math import clamp
 from advection import advect_scalar, advect_velocities
 from divergence import clear_divergence
-from draw import draw_ui
 from mac import MacGrid, get_mouse_coords_int
 from scalar import ScalarGrid
 from ui import screen
@@ -97,16 +96,21 @@ def set_obstacle(x, y, to_wall):
     grid.ygrid[y + 1, x] = 0
     density.field[y, x] = 0
 
-
 def check_sym(m):
     h, w = m.shape
-    res = np.zeros(shape=(h // 2, w))
-    for j in range(0, h // 2):
-        for i in range(0, w):
-            res[j, i] = np.abs(m[j, i] - m[h // 2 - j, i])
-    res = np.round(res, 4).max(axis=1)
-    print("sim = ", res.max().max())
-    return res
+    if h % 2 == 0:
+        exit(f"heiht = {h} check sym needs odd hgiht")
+    half = h // 2
+
+    res = np.zeros((half, w))
+    for j in range(half):
+        top_row = m[j, :]
+        bottom_row = m[h - 1 - j, :]
+        res[j] = np.abs(top_row - bottom_row)
+
+    max_diff_per_row = np.round(res, 4).max(axis=1)
+    print("max symmetry diff =", max_diff_per_row.max())
+    return max_diff_per_row
 
 def arrow_wall():
     set_obstacle(WIDTH // 2  , HEIGHT // 2, True)
@@ -123,10 +127,16 @@ ci= WIDTH // 2 - 5  # central x-offset
 cj = HEIGHT // 2     # central y
 
 j = 0
-for i in range(3):
-    set_obstacle(ci + i, ci + j)
+for i in range(5):
+    set_obstacle(ci + i, cj + j, False)
+    j-= 1
+j = 0
+for i in range(5):
+    set_obstacle(ci + i, cj + j, False)
+    j+= 1
+
 print(grid.s)
-exit()
+# exit()
 
 while running:
     # set_obstacle(WIDTH -3, HEIGHT // 2, False)
@@ -134,7 +144,7 @@ while running:
     if not pause:
         grid.xgrid[:, 0] = v
         grid.xgrid[:, -1] = v
-    density.field[HEIGHT // 2 -1, 0 ] = 225
+    # density.field[HEIGHT // 2 -1, 0 ] = 225
     density.field[HEIGHT // 2, 0 ] = 225
     screen.fill(BLACK)
     for event in pygame.event.get():
@@ -146,7 +156,7 @@ while running:
 
     grid.draw_centers()
     grid.draw_mouse()
-    draw_ui(screen)
+    # draw_ui(screen)
     # density.draw_mouse()
     keys = pygame.key.get_pressed()
     if not pause:
@@ -165,7 +175,7 @@ while running:
     if pygame.mouse.get_pressed()[0]:
         x, y = get_mouse_coords_int()
         set_obstacle(x, y, to_wall)
-    check_sym(grid.ygrid)
+    check_sym(density.field)
     print("density = ", np.sum(density.field))
 
     pygame.display.flip()

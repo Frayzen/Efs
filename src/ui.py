@@ -7,7 +7,7 @@ from consts import CELL_SIZE, PIX_HEIGHT, PIX_WIDTH, RED
 
 pygame.init()
 screen = pygame.display.set_mode((PIX_WIDTH, PIX_HEIGHT))
-pygame.display.set_caption("Dynamic Grid Colors")
+# pygame.display.set_caption("Dynamic Grid Colors")
 
 
 def draw_line(start, dest, color=RED, width=2):
