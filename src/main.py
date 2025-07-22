@@ -122,18 +122,11 @@ pause = False
 ci= WIDTH // 2 - 5  # central x-offset
 cj = HEIGHT // 2     # central y
 
-j = 1
-for i in range(6):
-    # Right side of the V
-    set_obstacle(ci + i, cj + j, False)
-    set_obstacle(ci + i, cj - j, False)
-
-    # Left side of the V (mirrored horizontally)
-    # set_obstacle(ci - i, cj + j, False)
-    # set_obstacle(ci - i, cj - j, False)
-    j+=1 
+j = 0
+for i in range(3):
+    set_obstacle(ci + i, ci + j)
 print(grid.s)
-# exit()
+exit()
 
 while running:
     # set_obstacle(WIDTH -3, HEIGHT // 2, False)
